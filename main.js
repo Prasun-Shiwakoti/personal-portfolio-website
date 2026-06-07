@@ -27,7 +27,7 @@ function renderHero(){
     `<span class="idx">[ ${p.firstName} ${p.lastName} ]</span> ${p.roleTag}`;
   document.getElementById('heroAvail').textContent = p.availableLabel;
   document.getElementById('heroHeadline').innerHTML =
-    h.headline.map(line => `<span class="line" style="height:13rem" ><span>${lineSegments(line)}</span></span>`).join('');
+    h.headline.map(line => `<span class="line" ><span>${lineSegments(line)}</span></span>`).join('');
   document.getElementById('heroLede').textContent = h.lede;
   document.getElementById('heroCtas').innerHTML =
     `<a href="${h.ctaPrimary.href}" class="btn" data-reveal data-magnetic>${h.ctaPrimary.label} <span class="arrow">&rarr;</span></a>
@@ -123,7 +123,7 @@ function renderCerts(){
 function renderContact(){
   const p = CONFIG.profile, c = CONFIG.contact;
   document.getElementById('contactHeadline').innerHTML =
-    c.headline.map(line => `<span class="line" style="height:11rem" ><span>${lineSegments(line)}</span></span>`).join('');
+    c.headline.map(line => `<span class="line"><span>${lineSegments(line)}</span></span>`).join('');
   document.getElementById('contactLinks').innerHTML = `
     <a href="mailto:${p.email}" data-magnetic>${p.email} <span class="arrow">&rarr;</span></a>
     <a href="tel:${p.phoneHref}" data-magnetic>${p.phone} <span class="arrow">&rarr;</span></a>
