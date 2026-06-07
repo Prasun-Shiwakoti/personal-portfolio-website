@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Prasun Shiwakoti</title>
+<meta name="description" id="metaDesc" content="" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,500;1,9..144,600&family=Familjen+Grotesk:wght@400;500;600;700&family=Space+Mono:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Preloader (name + percent filled from CONFIG) -->
+<div id="loader" aria-hidden="true">
+  <div class="lbar" id="lbar"></div>
+  <div class="lname" id="loaderName"></div>
+  <div class="lpct">loading <span id="pct">0</span></div>
+</div>
+
+<div class="cursor" aria-hidden="true"></div>
+<div class="cursor-dot" aria-hidden="true"></div>
+
+<!-- Nav (links filled from CONFIG.nav) -->
+<header class="nav">
+  <div class="shell">
+    <a href="#top" class="logo" id="navLogo"></a>
+    <nav id="navLinks"></nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu">Menu</button>
+  </div>
+</header>
+
+<!-- Mobile fullscreen menu (links filled from CONFIG.nav) -->
+<div class="mobile-menu" id="mmenu" aria-hidden="true">
+  <button class="mclose" id="menuClose" aria-label="Close menu">Close</button>
+  <div id="mmenuLinks" style="display:flex;flex-direction:column;align-items:center;gap:18px"></div>
+</div>
+
+<div id="top">
+
+<!-- HERO (all text filled from CONFIG.profile / CONFIG.hero) -->
+<section class="hero shell">
+  <div class="top">
+    <div class="eyebrow" id="heroEyebrow" data-reveal></div>
+    <span class="dot-live" data-reveal><i></i> <span id="heroAvail"></span></span>
+  </div>
+  <h1 class="display" id="heroHeadline"></h1>
+  <div class="bottom">
+    <p class="lede" id="heroLede" data-reveal></p>
+    <div class="ctas" id="heroCtas"></div>
+  </div>
+  <div class="scroll-cue" aria-hidden="true"><span class="ln"></span> scroll</div>
+</section>
+
+<!-- KINETIC BAND (languages + frameworks from CONFIG.kinetic) -->
+<div class="kband" aria-hidden="true"><div class="ktrack" id="ktrack"></div></div>
+
+<!-- ABOUT + PHOTO -->
+<section id="about" class="shell">
+  <div class="sec-head">
+    <h2 class="section-title">About</h2>
+    <div class="right" id="aboutHeadRight" data-reveal></div>
+  </div>
+  <div class="about">
+    <div class="avatar-wrap" data-reveal>
+      <div class="avatar">
+        <img id="avatarImg" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+        <div class="mono-fallback" id="avatarMono" style="display:none"></div>
+      </div>
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 120 120">
+          <defs><path id="cp" d="M60,60 m-46,0 a46,46 0 1,1 92,0 a46,46 0 1,1 -92,0"/></defs>
+          <text><textPath href="#cp" id="badgeText" startOffset="0"></textPath></text>
+        </svg>
+        <span class="ctr">&nearr;</span>
+      </div>
+    </div>
+    <div>
+      <p class="lead" id="aboutLead" data-splitlines></p>
+      <p class="sub" id="aboutSub" data-reveal></p>
+    </div>
+  </div>
+  <div class="statline" id="statline" data-reveal></div>
+</section>
+
+<!-- WORK : overlapping sticky cards (from CONFIG.projects) -->
+<section id="work" class="shell">
+  <div class="sec-head">
+    <h2 class="section-title">Selected work</h2>
+    <div class="right" data-reveal>A few things I&rsquo;ve built. They stack as you scroll. Full source on GitHub.</div>
+  </div>
+  <div class="stack" id="stack"></div>
+</section>
+
+<!-- EXPERIENCE (from CONFIG.experience) -->
+<section id="experience" class="shell">
+  <div class="sec-head">
+    <h2 class="section-title">Experience</h2>
+    <div class="right" data-reveal>Where I&rsquo;ve been shipping.</div>
+  </div>
+  <div class="xp" id="xp"></div>
+</section>
+
+<!-- BACKGROUND : education + earlier highlights (compact) -->
+<section class="shell">
+  <div class="sec-head">
+    <h2 class="section-title" style="font-size:clamp(26px,4vw,46px)">Background</h2>
+    <div class="right" data-reveal>Education and a couple of earlier highlights.</div>
+  </div>
+  <div class="bg-grid">
+    <div id="eduBlock" data-reveal></div>
+    <div id="hlBlock" data-reveal></div>
+  </div>
+  <h4 style="font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--soft);margin-top:clamp(34px,4vw,56px)">Certifications</h4>
+</section>
+
+<!-- CERTS : horizontal scrolling cards (from CONFIG.certs) -->
+<div id="cgallery"><div id="ctrack"></div></div>
+
+<!-- CONTACT -->
+<section id="contact" class="contact shell">
+  <div class="eyebrow" data-reveal><span class="idx">[ 05 ]</span> Contact</div>
+  <div class="big" id="contactHeadline" style="margin-top:22px"></div>
+  <div class="row">
+    <div class="links" id="contactLinks" data-reveal></div>
+    <a href="#" class="btn solid" id="contactCta" data-reveal data-magnetic></a>
+  </div>
+  <div class="foot">
+    <span id="footCopy"></span>
+    <span id="footLoc"></span>
+    <span id="footNote"></span>
+  </div>
+</section>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+<script src="config.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
