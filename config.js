@@ -150,7 +150,7 @@ const CONFIG = {
 	education: {
 		degree: "B.E. Computer Engineering",
 		meta: "Kathmandu Engineering College · 2023 to Present",
-		detail: "Full scholarship on an IOE entrance rank of 320, current average 83%. Vice President, KEC IT Club.",
+		detail: "Full scholarship on an IOE entrance rank of 320, current average 83%. President, KEC IT Club.",
 	},
 
 	/* earlier highlights. 'pop' is the small highlighted metric in the title */
