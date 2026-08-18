@@ -1,303 +1,416 @@
-/* ----------------------------------------------------------------------------
-   RENDER FUNCTIONS
-   Each one writes one part of the page from CONFIG. They run immediately (before
-   any animation), so the site shows real content even if GSAP fails to load.
-   ---------------------------------------------------------------------------- */
+/* ============================================================================
+   main.js — renders the page from CONFIG, then wires up the small amount of
+   behaviour that CSS cannot do on its own.
 
-/* set <title>, meta description, nav logo, preloader name */
-function renderMeta(){
-  const p = CONFIG.profile;
-  document.title = CONFIG.meta.title;
-  document.getElementById('metaDesc').setAttribute('content', CONFIG.meta.description);
-  document.getElementById('navLogo').innerHTML = (p.firstName[0]+p.lastName[0]) + '<span style="color:var(--accent)">.</span>';
-  document.getElementById('loaderName').innerHTML = `${p.firstName}<br><span class="it">${p.lastName}</span>`;
+   No framework, no animation library. Reveals are CSS transitions switched on
+   by an IntersectionObserver, which means nothing is recalculated while you
+   scroll and nothing can be left invisible by a stale scroll measurement.
+   ============================================================================ */
+
+/* ══════════════════════════════ A. RENDER ══════════════════════════════ */
+
+/* wrap each line of a headline in an overflow mask so it can rise into place */
+function maskedLines(lines) {
+	return lines
+		.map((l) => `<span class="ln"><span>${lineSegments(l)}</span></span>`)
+		.join("");
 }
 
-/* nav links (desktop) and the mobile menu links */
-function renderNav(){
-  const desktop = CONFIG.nav.map(n => `<a href="${n.href}">${n.label}</a>`).join('');
-  document.getElementById('navLinks').innerHTML = desktop;
-  document.getElementById('mmenuLinks').innerHTML = desktop;
+/* <title>, meta description, wordmark */
+function renderMeta() {
+	const p = CONFIG.profile;
+	document.title = CONFIG.meta.title;
+	document
+		.getElementById("metaDesc")
+		.setAttribute("content", CONFIG.meta.description);
+	document.getElementById("wordmark").textContent =
+		`${p.firstName} ${p.lastName}`;
 }
 
-/* hero: eyebrow, availability, headline, lede, the two CTA buttons */
-function renderHero(){
-  const p = CONFIG.profile, h = CONFIG.hero;
-  document.getElementById('heroEyebrow').innerHTML =
-    `<span class="idx">[ ${p.firstName} ${p.lastName} ]</span> ${p.roleTag}`;
-  document.getElementById('heroAvail').textContent = p.availableLabel;
-  document.getElementById('heroHeadline').innerHTML =
-    h.headline.map(line => `<span class="line" ><span>${lineSegments(line)}</span></span>`).join('');
-  document.getElementById('heroLede').textContent = h.lede;
-  document.getElementById('heroCtas').innerHTML =
-    `<a href="${h.ctaPrimary.href}" class="btn" data-reveal data-magnetic>${h.ctaPrimary.label} <span class="arrow">&rarr;</span></a>
-     <a href="${h.ctaSolid.href}" class="btn solid" data-reveal data-magnetic>${h.ctaSolid.label} <span class="arrow">&rarr;</span></a>`;
+/* topbar links and the mobile index sheet */
+function renderNav() {
+	const links = CONFIG.nav
+		.map((n) => `<a href="${n.href}" data-nav="${n.href}">${n.label}</a>`)
+		.join("");
+	document.getElementById("navLinks").innerHTML = links;
+	document.getElementById("mmenuLinks").innerHTML = links;
 }
 
-/* about: head note, photo + monogram fallback, rotating badge, lead + sub text */
-function renderAbout(){
-  const p = CONFIG.profile, a = CONFIG.about;
-  document.getElementById('aboutHeadRight').textContent = a.headRight;
-  document.getElementById('avatarImg').src = p.photo;
-  document.getElementById('avatarImg').alt = `${p.firstName} ${p.lastName}`;
-  document.getElementById('avatarMono').textContent = p.firstName[0]+p.lastName[0];
-  document.getElementById('badgeText').textContent = (p.badgeText+' ').repeat(2);
-  document.getElementById('aboutLead').textContent = a.lead;
-  document.getElementById('aboutSub').textContent = a.sub;
+/* masthead: dateline, name, lede, aside links */
+function renderMasthead() {
+	const p = CONFIG.profile,
+		m = CONFIG.masthead;
+
+	document.getElementById("dateline").innerHTML = `
+		<span>${p.location}</span>
+		<span>${p.coords}</span>
+		<span>Local time <span id="clock">--:--</span></span>
+		<span class="live">${p.availableLabel}</span>
+		<span>${p.roleTag}</span>`;
+
+	document.getElementById("mastName").innerHTML = maskedLines(m.name);
+	document.getElementById("mastLede").textContent = m.lede;
+	document.getElementById("mastLedeSub").textContent = m.ledeSub;
+
+	document.getElementById("mastLinks").innerHTML = m.links
+		.map(
+			(l) =>
+				`<a href="${l.href}">${l.label} <span class="arw">&rarr;</span></a>`,
+		)
+		.join("");
 }
 
-/* the four stat cells. Numeric ones get data-count so they animate on scroll */
-function renderStats(){
-  document.getElementById('statline').innerHTML = CONFIG.stats.map(s => {
-    const inner = (s.value === null)
-      ? `<div class="num">${s.display}</div>`
-      : `<div class="num" data-count="${s.value}" data-suffix="${s.suffix||''}">0</div>`;
-    return `<div class="s">${inner}<div class="lbl">${s.label}</div></div>`;
-  }).join('');
+/* about: portrait plate, caption, prose */
+function renderAbout() {
+	const p = CONFIG.profile,
+		a = CONFIG.about;
+
+	document.getElementById("aboutNote").textContent = a.note;
+
+	const img = document.getElementById("portrait");
+	img.src = p.photo;
+	if (p.photoSrcset) img.srcset = p.photoSrcset;
+	if (p.photoSizes) img.sizes = p.photoSizes;
+	img.alt = `${p.firstName} ${p.lastName}`;
+	
+
+	document.getElementById("plateCaption").innerHTML =
+		`<span>Fig. 1</span><span>${a.caption}</span>`;
+
+	document.getElementById("aboutLead").textContent = a.lead;
+	document.getElementById("aboutSub").textContent = a.sub;
 }
 
-/* kinetic band words, tripled so the loop has room to travel */
-function renderKinetic(){
-  const set = CONFIG.kinetic.map(k => `<span>${k}<span class="star">&#9670;</span></span>`).join('');
-  document.getElementById('ktrack').innerHTML = set + set + set;
+/* the ledger strip. Numeric cells get data-count and tick up when seen */
+function renderLedger() {
+	document.getElementById("ledger").innerHTML = CONFIG.stats
+		.map((s) => {
+			/* the finished value goes straight into the markup, so the ledger
+			   reads correctly even if the count-up never runs */
+			const num =
+				s.value === null
+					? `<div class="ledger-num">${s.display}</div>`
+					: `<div class="ledger-num" data-count="${s.value}" data-suffix="${s.suffix || ""}">${s.value}${s.suffix || ""}</div>`;
+			return `<div class="ledger-cell">${num}<div class="ledger-label">${s.label}</div></div>`;
+		})
+		.join("");
 }
 
-/* project cards. Each card gets an increasing 'top' + z-index so they stack */
-function renderWork(){
-  document.getElementById('stack').innerHTML = CONFIG.projects.map((p,i) => `
-    <a class="pcard" href="${p.url}" target="_blank" rel="noopener" style="top:calc(92px + ${i*14}px);z-index:${i+1}">
-      <div>
-        <div class="pidx">[ ${p.n} ]</div>
-        <h3>${p.t}</h3>
-        <p>${p.d}</p>
-        <div class="ptags">${p.tags.map(t => `<em>${t}</em>`).join('')}</div>
-      </div>
-      <div class="pgo">View repo <span class="arrow">&nearr;</span></div>
-    </a>`).join('');
+/* the skills ticker, rendered twice so the CSS marquee loops seamlessly */
+function renderTicker() {
+	const set = CONFIG.kinetic.map((k) => `<span>${k}</span>`).join("");
+	document.getElementById("ticker").innerHTML = set + set;
 }
 
-/* experience rows */
-function renderExperience(){
-  document.getElementById('xp').innerHTML = CONFIG.experience.map(x => `
-    <div class="xp-item" data-reveal>
-      <div class="when">${x.when}</div>
-      <div>
-        <div class="role">${x.role}</div>
-        <span class="org">${x.org}</span>
-        <ul>${x.points.map(pt => `<li>${pt}</li>`).join('')}</ul>
-      </div>
-    </div>`).join('');
+/* selected work, as a numbered index rather than cards */
+function renderWork() {
+	document.getElementById("workIndex").innerHTML = CONFIG.projects
+		.map(
+			(p) => `
+		<li data-reveal>
+			<a class="index-row" href="${p.url}" target="_blank" rel="noopener">
+				<div class="index-inner">
+					<span class="index-num">${p.n}</span>
+					<span class="index-main">
+						<span class="index-title">${p.t}<span class="arw">&nearr;</span></span>
+						<span class="index-tags">${p.tags.map((t) => `<span>${t}</span>`).join("")}</span>
+					</span>
+					<span class="index-desc">${p.d}</span>
+					<span class="index-year">${p.year}</span>
+				</div>
+			</a>
+		</li>`,
+		)
+		.join("");
 }
 
-/* education block + earlier-highlights block */
-function renderBackground(){
-  const e = CONFIG.education;
-  document.getElementById('eduBlock').innerHTML = `
-    <h4>Education</h4>
-    <div class="bg-item">
-      <div class="t">${e.degree}</div>
-      <div class="m">${e.meta}</div>
-      <div class="d">${e.detail}</div>
-    </div>`;
-  document.getElementById('hlBlock').innerHTML = `
-    <h4>Earlier highlights</h4>
-    ${CONFIG.highlights.map(h => `
-      <div class="bg-item">
-        <div class="t">${h.title} <span class="pop">${h.pop}</span></div>
-        <div class="m">${h.meta}</div>
-        <div class="d">${h.detail}</div>
-      </div>`).join('')}`;
+/* experience, dates in the margin */
+function renderExperience() {
+	document.getElementById("entries").innerHTML = CONFIG.experience
+		.map(
+			(x) => `
+		<article class="entry" data-reveal>
+			<div class="entry-when">${x.when}<span class="until">${x.until}</span></div>
+			<div>
+				<h3 class="entry-role">${x.role}</h3>
+				<span class="entry-org">${x.org}</span>
+				<ul>${x.points.map((pt) => `<li>${pt}</li>`).join("")}</ul>
+			</div>
+		</article>`,
+		)
+		.join("");
 }
 
-/* certification cards (horizontal track) */
-function renderCerts(){
-  document.getElementById('ctrack').innerHTML = CONFIG.certs.map(c => `
-    <a class="cert" href="${c.url}" target="_blank" rel="noopener">
-      <div class="issuer">${c.issuer}</div>
-      <div class="ctitle">${c.title}</div>
-      <span class="clink">Certificate <span class="arrow">&nearr;</span></span>
-    </a>`).join('');
+/* education, earlier highlights, certifications */
+function renderBackground() {
+	const e = CONFIG.education;
+
+	document.getElementById("eduBlock").innerHTML = `
+		<h4>Education</h4>
+		<div class="bg-item">
+			<div class="t">${e.degree}</div>
+			<div class="m">${e.meta}</div>
+			<div class="d">${e.detail}</div>
+		</div>`;
+
+	document.getElementById("hlBlock").innerHTML = `
+		<h4>Earlier</h4>
+		${CONFIG.highlights
+			.map(
+				(h) => `
+			<div class="bg-item">
+				<div class="t">${h.title}</div>
+				<div class="m">${h.meta}</div>
+				<div class="d">${h.detail}</div>
+			</div>`,
+			)
+			.join("")}`;
+
+	document.getElementById("certs").innerHTML = CONFIG.certs
+		.map(
+			(c) => `
+		<li data-reveal>
+			<a class="cert-row" href="${c.url}" target="_blank" rel="noopener">
+				<span class="cert-issuer">${c.issuer}</span>
+				<span class="cert-title">${c.title}</span>
+				<span class="cert-year">${c.year}</span>
+			</a>
+		</li>`,
+		)
+		.join("");
 }
 
-/* contact heading, links, CTA and footer (copyright year is automatic) */
-function renderContact(){
-  const p = CONFIG.profile, c = CONFIG.contact;
-  document.getElementById('contactHeadline').innerHTML =
-    c.headline.map(line => `<span class="line"><span>${lineSegments(line)}</span></span>`).join('');
-  document.getElementById('contactLinks').innerHTML = `
-    <a href="mailto:${p.email}" data-magnetic>${p.email} <span class="arrow">&rarr;</span></a>
-    <a href="tel:${p.phoneHref}" data-magnetic>${p.phone} <span class="arrow">&rarr;</span></a>
-    <a href="${p.github}" target="_blank" rel="noopener" data-magnetic>GitHub <span class="arrow">&nearr;</span></a>
-    <a href="${p.linkedin}" target="_blank" rel="noopener" data-magnetic>LinkedIn <span class="arrow">&nearr;</span></a>`;
-  const cta = document.getElementById('contactCta');
-  cta.href = `mailto:${p.email}`;
-  cta.innerHTML = `${c.ctaLabel} <span class="arrow">&rarr;</span>`;
-  document.getElementById('footCopy').textContent = `© ${new Date().getFullYear()} ${p.firstName} ${p.lastName}`;
-  document.getElementById('footLoc').innerHTML = `${p.location} · <span class="clock" id="clock">--:--:--</span> local`;
-  document.getElementById('footNote').textContent = c.footerNote;
+/* contact block */
+function renderContact() {
+	const p = CONFIG.profile,
+		c = CONFIG.contact;
+
+	document.getElementById("contactHead").innerHTML = maskedLines(c.headline);
+	document.getElementById("contactNote").textContent = c.note;
+
+	const rows = [
+		{ kind: "Email", val: p.email, href: `mailto:${p.email}`, out: false },
+		{ kind: "Phone", val: p.phone, href: `tel:${p.phoneHref}`, out: false },
+		{ kind: "GitHub", val: "Prasun-Shiwakoti", href: p.github, out: true },
+		{ kind: "LinkedIn", val: "prasun-shiwakoti", href: p.linkedin, out: true },
+	];
+
+	document.getElementById("contactList").innerHTML = rows
+		.map(
+			(r) => `
+		<li data-reveal>
+			<a href="${r.href}"${r.out ? ' target="_blank" rel="noopener"' : ""}>
+				<span class="kind">${r.kind}</span>
+				<span class="val">${r.val}</span>
+				<span class="arw">${r.out ? "&nearr;" : "&rarr;"}</span>
+			</a>
+		</li>`,
+		)
+		.join("");
+
+	document.getElementById("footCopy").textContent =
+		`© ${new Date().getFullYear()} ${p.firstName} ${p.lastName}`;
+	document.getElementById("footLoc").innerHTML =
+		`${p.location} · <span id="clockFoot">--:--</span>`;
+	document.getElementById("footNote").textContent = c.footerNote;
 }
 
-/* run every renderer once, in order */
-function renderAll(){
-  renderMeta(); renderNav(); renderHero(); renderAbout(); renderStats();
-  renderKinetic(); renderWork(); renderExperience(); renderBackground();
-  renderCerts(); renderContact();
-}
-renderAll();   /* build the page content right away */
+renderMeta();
+renderNav();
+renderMasthead();
+renderAbout();
+renderLedger();
+renderTicker();
+renderWork();
+renderExperience();
+renderBackground();
+renderContact();
 
-/* ----------------------------------------------------------------------------
-   PRELOADER : animate a 0 to 100 counter, then reveal the site
-   ---------------------------------------------------------------------------- */
-(function(){
-  const loader=document.getElementById('loader'),pct=document.getElementById('pct'),bar=document.getElementById('lbar');
-  let v=0;
-  (function tick(){
-    v += Math.max(1,(100-v)*0.07);
-    if(v>=100) v=100;
-    pct.textContent=Math.round(v); bar.style.width=v+'%';
-    if(v<100) requestAnimationFrame(tick); else done();
-  })();
-  function done(){
-    if(window.gsap){
-      gsap.to(loader,{autoAlpha:0,duration:.7,ease:"power3.inOut",delay:.2,onStart:init,onComplete:()=>loader.remove()});
-    } else {
-      loader.remove();
-      const cg=document.getElementById('cgallery'); if(cg) cg.style.overflowX='auto';
-      init();
-    }
-  }
-  setTimeout(()=>{ if(document.body.contains(loader)){loader.remove(); init();} },4500);
+/* ══════════════════════════════ B. BEHAVIOUR ══════════════════════════════ */
+
+const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* ---- reveals -------------------------------------------------------------
+   One observer for the whole page. Each element is unobserved the moment it
+   has been shown, so the work is strictly O(number of elements), once. */
+(function () {
+	const targets = document.querySelectorAll("[data-reveal]");
+
+	/* No observer support, or the visitor asked for less motion: show it all
+	   immediately. Never leave anything depending on a scroll event. */
+	if (REDUCED || !("IntersectionObserver" in window)) {
+		targets.forEach((el) => el.classList.add("in"));
+		return;
+	}
+
+	const io = new IntersectionObserver(
+		(entries, obs) => {
+			entries.forEach((entry) => {
+				if (!entry.isIntersecting) return;
+				entry.target.classList.add("in");
+				obs.unobserve(entry.target);
+			});
+		},
+		{ rootMargin: "0px 0px -8% 0px", threshold: 0.05 },
+	);
+
+	targets.forEach((el) => io.observe(el));
+
+	/* Belt and braces. Content must never be invisible because a callback did
+	   not arrive, so a plain rect check also reveals whatever is on screen.
+	   It runs on load and on scroll, throttled to one frame, and takes itself
+	   out of the way as soon as everything has been shown. */
+	let pending = Array.from(targets);
+	let queued = false;
+
+	const sweep = () => {
+		queued = false;
+		pending = pending.filter((el) => {
+			const r = el.getBoundingClientRect();
+			if (r.top < innerHeight && r.bottom > 0) {
+				el.classList.add("in");
+				io.unobserve(el);
+				return false;
+			}
+			return true;
+		});
+		if (!pending.length) {
+			removeEventListener("scroll", onScroll);
+			io.disconnect();
+		}
+	};
+
+	const onScroll = () => {
+		if (queued) return;
+		queued = true;
+		requestAnimationFrame(sweep);
+	};
+
+	addEventListener("scroll", onScroll, { passive: true });
+	addEventListener("load", sweep);
 })();
 
-/* ----------------------------------------------------------------------------
-   init() : all scroll + entrance animations. Runs once, after the preloader.
-   ---------------------------------------------------------------------------- */
-let started=false;
-function init(){
-  if(started) return; started=true;
-  if(!window.gsap) return;
-  gsap.registerPlugin(ScrollTrigger);
+/* ---- the ledger numbers tick up once, when first seen ---- */
+(function () {
+	const nums = document.querySelectorAll("[data-count]");
+	/* the markup already carries the final value, so with reduced motion or
+	   without an observer there is simply nothing left to do */
+	if (!nums.length || REDUCED || !("IntersectionObserver" in window)) return;
 
-  let lenis;
-  if(window.Lenis){
-    lenis=new Lenis({lerp:.085,smoothWheel:true});
-    lenis.on('scroll',ScrollTrigger.update);
-    gsap.ticker.add(t=>lenis.raf(t*1000));
-    gsap.ticker.lagSmoothing(0);
-    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{
-      const el=document.querySelector(a.getAttribute('href'));
-      if(el){ e.preventDefault(); lenis.scrollTo(el,{offset:-10}); }
-    }));
-  }
+	const run = (el) => {
+		const end = +el.dataset.count,
+			suffix = el.dataset.suffix || "";
+		const started = performance.now(),
+			ms = 1400;
+		const step = (now) => {
+			const t = Math.min(1, (now - started) / ms);
+			/* ease-out cubic */
+			const v = Math.round(end * (1 - Math.pow(1 - t, 3)));
+			el.textContent = v + suffix;
+			if (t < 1) requestAnimationFrame(step);
+		};
+		requestAnimationFrame(step);
+	};
 
-  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
-
-  gsap.set('.line > span',{yPercent:115});
-
-  if(!reduce){
-    gsap.to('.hero .line > span',{yPercent:0,duration:1.15,ease:"expo.out",stagger:.1,delay:.05});
-    gsap.from('.hero [data-reveal]',{y:26,opacity:0,duration:1,ease:"power3.out",stagger:.08,delay:.5});
-
-    gsap.utils.toArray('[data-reveal]').forEach(el=>{
-      if(el.closest('.hero')) return;
-      gsap.from(el,{y:46,opacity:0,duration:1.1,ease:"expo.out",scrollTrigger:{trigger:el,start:"top 90%"}});
-    });
-
-    gsap.utils.toArray('[data-splitlines]').forEach(p=>{
-      splitToLines(p);
-      gsap.set(p.querySelectorAll('.line > span'),{yPercent:115});
-      gsap.to(p.querySelectorAll('.line > span'),{yPercent:0,duration:1.1,ease:"expo.out",stagger:.08,scrollTrigger:{trigger:p,start:"top 86%"}});
-    });
-
-    gsap.utils.toArray('.contact .line > span').forEach(s=>{
-      gsap.to(s,{yPercent:0,duration:1.1,ease:"expo.out",scrollTrigger:{trigger:s.closest('.big'),start:"top 86%"}});
-    });
-
-    gsap.utils.toArray('[data-count]').forEach(el=>{
-      const end=+el.dataset.count, suf=el.dataset.suffix||'', o={v:0};
-      ScrollTrigger.create({trigger:el,start:"top 92%",once:true,onEnter:()=>
-        gsap.to(o,{v:end,duration:1.7,ease:"power2.out",onUpdate:()=>el.textContent=Math.round(o.v)+suf})});
-    });
-
-    const ktrack=document.getElementById('ktrack');
-    gsap.fromTo(ktrack,{xPercent:5},{xPercent:-38,ease:"none",scrollTrigger:{trigger:'.kband',start:"top bottom",end:"bottom top",scrub:1}});
-    const skewTo=gsap.quickTo(ktrack,"skewX",{duration:.5,ease:"power3"});
-    ScrollTrigger.create({onUpdate:self=>{
-      const v=gsap.utils.clamp(-8,8,self.getVelocity()/-280);
-      skewTo(v);
-      clearTimeout(ktrack._t); ktrack._t=setTimeout(()=>skewTo(0),120);
-    }});
-
-    const cards=gsap.utils.toArray('.pcard');
-    cards.forEach((card,i)=>{
-      if(i===cards.length-1) return;
-      gsap.to(card,{scale:.94,opacity:.55,ease:"none",scrollTrigger:{trigger:cards[i+1],start:"top 80%",end:"top 32%",scrub:true}});
-    });
-
-    const ctrk=document.getElementById('ctrack'),cgal=document.getElementById('cgallery');
-    const cdist=()=>Math.max(0, ctrk.scrollWidth - cgal.clientWidth + parseFloat(getComputedStyle(ctrk).paddingLeft));
-    gsap.to(ctrk,{x:()=>-cdist(),ease:"none",
-      scrollTrigger:{trigger:cgal,start:"center center",end:()=>"+="+cdist(),pin:true,scrub:1,anticipatePin:1,invalidateOnRefresh:true}});
-
-  } else {
-    gsap.set('.line > span',{yPercent:0});
-    const cg=document.getElementById('cgallery'); if(cg) cg.style.overflowX='auto';
-  }
-
-  ScrollTrigger.refresh();
-}
-
-/* split a paragraph into real visual lines, each wrapped in an overflow-hidden
-   mask, so the text can rise line by line */
-function splitToLines(p){
-  const words=p.textContent.trim().split(' ');
-  const frag=document.createElement('div');
-  words.forEach((w,i)=>{const s=document.createElement('span');s.textContent=w+(i<words.length-1?' ':'');s.style.display='inline-block';frag.appendChild(s)});
-  p.textContent=''; p.appendChild(frag);
-  const lines=[]; let cur=[], last=null;
-  [...frag.children].forEach(s=>{const top=s.offsetTop;if(last===null)last=top;if(top>last){lines.push(cur);cur=[];last=top}cur.push(s.textContent)});
-  if(cur.length) lines.push(cur);
-  p.innerHTML=lines.map(l=>`<span class="line"><span>${l.join('')}</span></span>`).join('');
-}
-
-/* ----------------------------------------------------------------------------
-   CUSTOM CURSOR + MAGNETIC BUTTONS (skipped on touch devices)
-   ---------------------------------------------------------------------------- */
-(function(){
-  if(matchMedia('(hover:none)').matches) return;
-  const cur=document.querySelector('.cursor'),dot=document.querySelector('.cursor-dot');
-  let mx=innerWidth/2,my=innerHeight/2,cx=mx,cy=my;
-  addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`});
-  (function loop(){cx+=(mx-cx)*.16;cy+=(my-cy)*.16;cur.style.transform=`translate(${cx}px,${cy}px) translate(-50%,-50%)`;requestAnimationFrame(loop)})();
-  document.querySelectorAll('a,button,.pcard,.cert,[data-magnetic]').forEach(el=>{
-    el.addEventListener('mouseenter',()=>cur.classList.add('is-hover'));
-    el.addEventListener('mouseleave',()=>cur.classList.remove('is-hover'));
-  });
-  document.querySelectorAll('[data-magnetic]').forEach(el=>{
-    el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect();
-      if(window.gsap)gsap.to(el,{x:(e.clientX-(r.left+r.width/2))*.3,y:(e.clientY-(r.top+r.height/2))*.4,duration:.4,ease:"power3.out"})});
-    el.addEventListener('mouseleave',()=>{if(window.gsap)gsap.to(el,{x:0,y:0,duration:.6,ease:"elastic.out(1,.4)"})});
-  });
+	const io = new IntersectionObserver(
+		(entries, obs) => {
+			entries.forEach((e) => {
+				if (!e.isIntersecting) return;
+				run(e.target);
+				obs.unobserve(e.target);
+			});
+		},
+		{ threshold: 0.4 },
+	);
+	nums.forEach((el) => io.observe(el));
 })();
 
-/* ----------------------------------------------------------------------------
-   MOBILE MENU : open/close the fullscreen overlay
-   ---------------------------------------------------------------------------- */
-(function(){
-  const t=document.getElementById('menuToggle'),c=document.getElementById('menuClose'),m=document.getElementById('mmenu');
-  if(!t||!m) return;
-  const open=()=>{m.classList.add('open');m.setAttribute('aria-hidden','false')};
-  const close=()=>{m.classList.remove('open');m.setAttribute('aria-hidden','true')};
-  t.addEventListener('click',open);
-  if(c) c.addEventListener('click',close);
-  m.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setTimeout(close,10)));
+/* ---- underline the nav link for whichever section you are in ---- */
+(function () {
+	if (!("IntersectionObserver" in window)) return;
+	const sections = [
+		document.querySelector(".masthead"),
+		...document.querySelectorAll("main section[id]"),
+	].filter(Boolean);
+
+	const mark = (href) =>
+		document
+			.querySelectorAll("[data-nav]")
+			.forEach((a) => a.classList.toggle("is-current", a.dataset.nav === href));
+
+	const io = new IntersectionObserver(
+		(entries) => {
+			/* whichever tracked section is nearest the top of the band wins */
+			const visible = entries
+				.filter((e) => e.isIntersecting)
+				.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+			if (visible.length) mark("#" + visible[0].target.id);
+		},
+		{ rootMargin: "-45% 0px -45% 0px" },
+	);
+	sections.forEach((s) => io.observe(s));
 })();
 
-/* ----------------------------------------------------------------------------
-   LIVE CLOCK : shows current local time in your timezone, updates every second
-   ---------------------------------------------------------------------------- */
-(function(){
-  const el=document.getElementById('clock'); if(!el) return;
-  const upd=()=>el.textContent=new Intl.DateTimeFormat('en-GB',{timeZone:CONFIG.profile.timezone,hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
-  upd(); setInterval(upd,1000);
+/* ---- topbar grows a hairline once you leave the masthead ---- */
+(function () {
+	const bar = document.getElementById("topbar");
+	let ticking = false;
+	const update = () => {
+		bar.classList.toggle("is-stuck", scrollY > 40);
+		ticking = false;
+	};
+	update();
+	addEventListener(
+		"scroll",
+		() => {
+			if (ticking) return;
+			ticking = true;
+			requestAnimationFrame(update);
+		},
+		{ passive: true },
+	);
+})();
+
+/* ---- mobile index sheet ---- */
+(function () {
+	const toggle = document.getElementById("menuToggle"),
+		close = document.getElementById("menuClose"),
+		sheet = document.getElementById("mmenu");
+	if (!toggle || !sheet) return;
+
+	const open = () => {
+		sheet.hidden = false;
+		toggle.setAttribute("aria-expanded", "true");
+		document.body.style.overflow = "hidden";
+	};
+	const shut = () => {
+		sheet.hidden = true;
+		toggle.setAttribute("aria-expanded", "false");
+		document.body.style.overflow = "";
+	};
+
+	toggle.addEventListener("click", open);
+	close.addEventListener("click", shut);
+	sheet.querySelectorAll("a").forEach((a) => a.addEventListener("click", shut));
+	addEventListener("keydown", (e) => {
+		if (e.key === "Escape" && !sheet.hidden) shut();
+	});
+})();
+
+/* ---- live local time, in the dateline ---- */
+(function () {
+	const fmt = new Intl.DateTimeFormat("en-GB", {
+		timeZone: CONFIG.profile.timezone,
+		hour: "2-digit",
+		minute: "2-digit",
+	});
+	const tick = () => {
+		const t = fmt.format(new Date());
+		const a = document.getElementById("clock"),
+			b = document.getElementById("clockFoot");
+		if (a) a.textContent = t;
+		if (b) b.textContent = t;
+	};
+	tick();
+	setInterval(tick, 15000);
 })();
