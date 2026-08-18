@@ -1,0 +1,47 @@
+# Prasun Shiwakoti
+
+> Backend and full-stack developer based in Kathmandu, Nepal. Works mainly in
+> Python and Django, with a background in machine learning. This is his
+> personal site — a single page covering selected work, experience, background
+> and contact details.
+
+- **Role:** Full Stack and Machine Learning Developer
+- **Location:** Kathmandu, Nepal
+- **Status:** open to work
+- **Email:** prasunshiwakoti@gmail.com
+- **Phone:** +977 9861812959
+- **Site:** https://prasunshiwakoti.com.np/
+
+Works across the whole stack but is strongest on the server side: schema design,
+queries, endpoints, and the operational side of keeping things running. Came to
+software through machine learning and stayed for the engineering.
+
+## Selected work
+
+- [AI Social-Media Automation](https://github.com/Prasun-Shiwakoti/Social-Media-Manager-AI): Automates content creation and scheduling, with sentiment analysis to read how an audience actually responds. Django, React, RAG, LSTM. 2025.
+- [Multi-Agent Research System](https://github.com/Prasun-Shiwakoti/Multi-Agent-Competitive-Intelligence-Research-System): Coordinated LLM agents that gather, cross-check and synthesise competitive market intelligence. Multi-agent, LLM, Python. 2025.
+- [News-Powered Market Analysis](https://github.com/Prasun-Shiwakoti/News-Powered-Stock-Market-Analysis): Fuses news sentiment with price data using LSTM and XGBoost to forecast market movement. Fellowship capstone. 2025.
+- [Transformer From Scratch](https://github.com/Prasun-Shiwakoti/transformer-from-scratch): A transformer built from first principles — attention, encoding and training, with no high-level shortcuts. PyTorch, NLP. 2024.
+- [CoCo, AI Study Assistant](https://github.com/Prasun-Shiwakoti/CoCo): A study companion that adapts its explanations and practice questions to how a particular person learns. Django, React, ML. 2024.
+- [Heart-Disease Prediction API](https://github.com/Prasun-Shiwakoti/heart-disease-api): A production REST API serving an ML model for cardiac risk prediction from patient data. FastAPI, scikit-learn. 2023.
+
+## Experience
+
+- **Full-Stack Web Developer, Magniment IT Pvt. Ltd.** (Sept 2025 – present): Independently runs a high-volume WhatsApp marketing platform serving 500+ active businesses and 50,000+ messages a day. Resolved critical architectural flaws and cleared 40+ production bugs left by the previous team. Architected and shipped a full e-commerce website builder in Django — drag-and-drop UI, inventory, payments — used by 100+ non-technical users.
+- **AI Fellow, Fusemachines AI Fellowship 2025** (May 2025 – Dec 2025): Completed a fully funded six-month AI Microdegree. Built production ML systems on 12-Factor methodology, Docker and GitHub Actions CI/CD. Engineered end-to-end data pipelines over 10,000+ records with Pandas and SQL.
+
+## Background
+
+- **B.E. Computer Engineering, Kathmandu Engineering College** (2023 – present): Full scholarship on an IOE entrance rank of 320, averaging 83%. President of the KEC IT Club.
+- **Hackathon Winner, Provathon 2020** (CSIT Association of Nepal): Full-stack health monitoring app with an ML model predicting cardiac arrest events from real-time data.
+- **President, CS Club, Kathmandu Model College** (2020 – 2022): Drove a 25% rise in sign-ups and ran bootcamps on cybersecurity, Python and web development.
+
+## Profiles
+
+- [GitHub](https://github.com/Prasun-Shiwakoti): Source for the projects above.
+- [LinkedIn](https://www.linkedin.com/in/prasun-shiwakoti-9570581b3/): Professional profile and contact.
+
+## Optional
+
+- [Certifications](https://prasunshiwakoti.com.np/#background): Fusemachines Microdegree in AI (2025), Stanford Machine Learning Specialization (2024), Udemy Complete Web Development Bootcamp (2023), Programiz Master DSA with Python (2023), Kaggle/Programiz Python Programming (2022).
+- **Technologies:** Python, Django, FastAPI, Flask, React, PostgreSQL, Docker, CI/CD, PyTorch, TensorFlow, scikit-learn, Pandas, SQL, Linux, REST APIs.

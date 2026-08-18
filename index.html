@@ -1,20 +1,357 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Prasun Shiwakoti</title>
-<meta name="description" id="metaDesc" content="" />
-<meta name="theme-color" content="#FBF9F5" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- set before first paint so reveal states never flash -->
-<script>document.documentElement.className = "js";</script>
+<!-- ─── identity ─────────────────────────────────────────────────────────── -->
+<title>Prasun Shiwakoti — Backend &amp; Django Developer in Kathmandu</title>
+<meta name="description" content="Prasun Shiwakoti is a backend and full-stack developer in Kathmandu, Nepal, building Python, Django and machine learning systems that run in production. Selected work, experience and contact.">
+<link rel="canonical" href="https://prasunshiwakoti.com.np/">
+<meta name="author" content="Prasun Shiwakoti">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta name="theme-color" content="#fbf9f5">
+<meta name="color-scheme" content="light">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;1,6..72,400&display=swap" rel="stylesheet">
+<!-- ─── link previews: LinkedIn, X, Slack, WhatsApp, iMessage ───────────── -->
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="Prasun Shiwakoti">
+<meta property="og:title" content="Prasun Shiwakoti — Backend &amp; Django Developer">
+<meta property="og:description" content="Backend and full-stack developer in Kathmandu, Nepal. Python, Django and machine learning systems that run in production.">
+<meta property="og:url" content="https://prasunshiwakoti.com.np/">
+<meta property="og:image" content="https://prasunshiwakoti.com.np/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Prasun Shiwakoti — backend and full-stack developer, Kathmandu">
+<meta property="og:locale" content="en_US">
+<meta property="profile:first_name" content="Prasun">
+<meta property="profile:last_name" content="Shiwakoti">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Prasun Shiwakoti — Backend &amp; Django Developer">
+<meta name="twitter:description" content="Backend and full-stack developer in Kathmandu, Nepal. Python, Django and machine learning systems that run in production.">
+<meta name="twitter:image" content="https://prasunshiwakoti.com.np/og.png">
 
-<link rel="stylesheet" href="style.css">
+<!-- ─── icons ───────────────────────────────────────────────────────────── -->
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+
+<!-- Set before first paint so reveal states never flash. The timer is the
+     safety net: this class is what hides un-revealed content, so if main.js
+     never arrives, nothing is left invisible waiting for an observer. -->
+<script>
+document.documentElement.className = "js";
+setTimeout(function () {
+  if (window.__enhanced) return;
+  document.querySelectorAll("[data-reveal]").forEach(function (el) {
+    el.classList.add("in");
+  });
+}, 2500);
+</script>
+
+<!-- fonts are same-origin now, so no third-party round trip. Only the three
+     faces the first screen needs are preloaded; latin-ext waits until asked. -->
+<link rel="preload" href="fonts/newsreader-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/newsreader-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+
+<link rel="stylesheet" href="style.css?v=1.1">
+
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@type": "Person",
+   "@id": "https://prasunshiwakoti.com.np/#person",
+   "name": "Prasun Shiwakoti",
+   "givenName": "Prasun",
+   "familyName": "Shiwakoti",
+   "url": "https://prasunshiwakoti.com.np/",
+   "image": {
+    "@type": "ImageObject",
+    "url": "https://prasunshiwakoti.com.np/profile-880.webp",
+    "width": 880,
+    "height": 1100
+   },
+   "jobTitle": "Full Stack and Machine Learning Developer",
+   "description": "Backend and full-stack developer in Kathmandu, Nepal, working in Python, Django and machine learning.",
+   "email": "mailto:prasunshiwakoti@gmail.com",
+   "telephone": "+9779861812959",
+   "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Kathmandu",
+    "addressCountry": "NP"
+   },
+   "homeLocation": {
+    "@type": "Place",
+    "geo": {
+     "@type": "GeoCoordinates",
+     "latitude": 27.7172,
+     "longitude": 85.324
+    }
+   },
+   "sameAs": [
+    "https://github.com/Prasun-Shiwakoti",
+    "https://www.linkedin.com/in/prasun-shiwakoti-9570581b3/"
+   ],
+   "knowsAbout": [
+    "Python",
+    "Django",
+    "FastAPI",
+    "Flask",
+    "React",
+    "PostgreSQL",
+    "Docker",
+    "CI/CD",
+    "PyTorch",
+    "TensorFlow",
+    "scikit-learn",
+    "Pandas",
+    "SQL",
+    "Linux",
+    "REST APIs",
+    "Backend development",
+    "REST API design",
+    "Machine learning"
+   ],
+   "worksFor": {
+    "@type": "Organization",
+    "name": "Magniment IT Pvt. Ltd."
+   },
+   "alumniOf": [
+    {
+     "@type": "CollegeOrUniversity",
+     "name": "Kathmandu Engineering College"
+    },
+    {
+     "@type": "Organization",
+     "name": "Fusemachines AI Fellowship"
+    }
+   ],
+   "hasCredential": [
+    {
+     "@type": "EducationalOccupationalCredential",
+     "name": "Microdegree™ in Artificial Intelligence",
+     "url": "https://s3.amazonaws.com/fuseclassroom-resources-prod/student-certificates/Microdegree%E2%84%A2+in+Artificial+Intelligence+2025-PRASUN+SHIWKAOTI.pdf",
+     "credentialCategory": "certificate",
+     "dateCreated": "2025",
+     "recognizedBy": {
+      "@type": "Organization",
+      "name": "Fusemachines"
+     }
+    },
+    {
+     "@type": "EducationalOccupationalCredential",
+     "name": "Machine Learning Specialization",
+     "url": "https://drive.google.com/drive/folders/17zi1_Wkko2qgP2ovTAr1cvHg_1dhdsCl?usp=sharing",
+     "credentialCategory": "certificate",
+     "dateCreated": "2024",
+     "recognizedBy": {
+      "@type": "Organization",
+      "name": "Stanford University"
+     }
+    },
+    {
+     "@type": "EducationalOccupationalCredential",
+     "name": "Complete Web Development Bootcamp",
+     "url": "https://drive.google.com/file/d/1KIbWk09eReShq8HwVO2PnMNuOdtDoLJ8/view?usp=drive_link",
+     "credentialCategory": "certificate",
+     "dateCreated": "2023",
+     "recognizedBy": {
+      "@type": "Organization",
+      "name": "Udemy"
+     }
+    },
+    {
+     "@type": "EducationalOccupationalCredential",
+     "name": "Master DSA with Python",
+     "url": "https://drive.google.com/drive/folders/1jWizIKJ_6pFDRU-CmtcS6hrHVxgYGAL3?usp=drive_link",
+     "credentialCategory": "certificate",
+     "dateCreated": "2023",
+     "recognizedBy": {
+      "@type": "Organization",
+      "name": "Programiz"
+     }
+    },
+    {
+     "@type": "EducationalOccupationalCredential",
+     "name": "Python Programming",
+     "url": "https://drive.google.com/drive/folders/1z050VClWnl4fpkyDY90hYjqVUScHnkPM?usp=drive_link",
+     "credentialCategory": "certificate",
+     "dateCreated": "2022",
+     "recognizedBy": {
+      "@type": "Organization",
+      "name": "Kaggle, Programiz"
+     }
+    }
+   ]
+  },
+  {
+   "@type": "WebSite",
+   "@id": "https://prasunshiwakoti.com.np/#website",
+   "url": "https://prasunshiwakoti.com.np/",
+   "name": "Prasun Shiwakoti",
+   "inLanguage": "en",
+   "publisher": {
+    "@id": "https://prasunshiwakoti.com.np/#person"
+   }
+  },
+  {
+   "@type": "ProfilePage",
+   "@id": "https://prasunshiwakoti.com.np/#webpage",
+   "url": "https://prasunshiwakoti.com.np/",
+   "name": "Prasun Shiwakoti — Backend & Django Developer in Kathmandu",
+   "isPartOf": {
+    "@id": "https://prasunshiwakoti.com.np/#website"
+   },
+   "about": {
+    "@id": "https://prasunshiwakoti.com.np/#person"
+   },
+   "mainEntity": {
+    "@id": "https://prasunshiwakoti.com.np/#person"
+   },
+   "inLanguage": "en",
+   "primaryImageOfPage": {
+    "@id": "https://prasunshiwakoti.com.np/#person"
+   }
+  },
+  {
+   "@type": "ItemList",
+   "@id": "https://prasunshiwakoti.com.np/#work",
+   "name": "Selected work",
+   "itemListOrder": "https://schema.org/ItemListOrderDescending",
+   "numberOfItems": 6,
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "item": {
+      "@type": "SoftwareSourceCode",
+      "name": "AI Social-Media Automation",
+      "description": "Automates content creation and scheduling, with sentiment analysis to read how an audience actually responds.",
+      "codeRepository": "https://github.com/Prasun-Shiwakoti/Social-Media-Manager-AI",
+      "url": "https://github.com/Prasun-Shiwakoti/Social-Media-Manager-AI",
+      "programmingLanguage": [
+       "Django",
+       "React",
+       "RAG",
+       "LSTM"
+      ],
+      "dateCreated": "2025",
+      "author": {
+       "@id": "https://prasunshiwakoti.com.np/#person"
+      }
+     }
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "item": {
+      "@type": "SoftwareSourceCode",
+      "name": "Multi-Agent Research System",
+      "description": "Coordinated LLM agents that gather, cross-check and synthesise competitive market intelligence.",
+      "codeRepository": "https://github.com/Prasun-Shiwakoti/Multi-Agent-Competitive-Intelligence-Research-System",
+      "url": "https://github.com/Prasun-Shiwakoti/Multi-Agent-Competitive-Intelligence-Research-System",
+      "programmingLanguage": [
+       "Multi-Agent",
+       "LLM",
+       "Python"
+      ],
+      "dateCreated": "2025",
+      "author": {
+       "@id": "https://prasunshiwakoti.com.np/#person"
+      }
+     }
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "item": {
+      "@type": "SoftwareSourceCode",
+      "name": "News-Powered Market Analysis",
+      "description": "Fuses news sentiment with price data using LSTM and XGBoost to forecast market movement. My fellowship capstone.",
+      "codeRepository": "https://github.com/Prasun-Shiwakoti/News-Powered-Stock-Market-Analysis",
+      "url": "https://github.com/Prasun-Shiwakoti/News-Powered-Stock-Market-Analysis",
+      "programmingLanguage": [
+       "LSTM",
+       "XGBoost",
+       "Pandas"
+      ],
+      "dateCreated": "2025",
+      "author": {
+       "@id": "https://prasunshiwakoti.com.np/#person"
+      }
+     }
+    },
+    {
+     "@type": "ListItem",
+     "position": 4,
+     "item": {
+      "@type": "SoftwareSourceCode",
+      "name": "Transformer From Scratch",
+      "description": "A transformer built from first principles — attention, encoding and training, with no high-level shortcuts to hide behind.",
+      "codeRepository": "https://github.com/Prasun-Shiwakoti/transformer-from-scratch",
+      "url": "https://github.com/Prasun-Shiwakoti/transformer-from-scratch",
+      "programmingLanguage": [
+       "PyTorch",
+       "NLP",
+       "From scratch"
+      ],
+      "dateCreated": "2024",
+      "author": {
+       "@id": "https://prasunshiwakoti.com.np/#person"
+      }
+     }
+    },
+    {
+     "@type": "ListItem",
+     "position": 5,
+     "item": {
+      "@type": "SoftwareSourceCode",
+      "name": "CoCo, AI Study Assistant",
+      "description": "A study companion that adapts its explanations and practice questions to how a particular person learns.",
+      "codeRepository": "https://github.com/Prasun-Shiwakoti/CoCo",
+      "url": "https://github.com/Prasun-Shiwakoti/CoCo",
+      "programmingLanguage": [
+       "Django",
+       "React",
+       "ML",
+       "Product"
+      ],
+      "dateCreated": "2024",
+      "author": {
+       "@id": "https://prasunshiwakoti.com.np/#person"
+      }
+     }
+    },
+    {
+     "@type": "ListItem",
+     "position": 6,
+     "item": {
+      "@type": "SoftwareSourceCode",
+      "name": "Heart-Disease Prediction API",
+      "description": "A production REST API serving an ML model for cardiac risk prediction from patient data.",
+      "codeRepository": "https://github.com/Prasun-Shiwakoti/heart-disease-api",
+      "url": "https://github.com/Prasun-Shiwakoti/heart-disease-api",
+      "programmingLanguage": [
+       "FastAPI",
+       "scikit-learn",
+       "REST"
+      ],
+      "dateCreated": "2023",
+      "author": {
+       "@id": "https://prasunshiwakoti.com.np/#person"
+      }
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
 </head>
 <body>
 
@@ -22,37 +359,47 @@
 
 <!-- thin sticky topbar -->
 <header class="topbar" id="topbar">
-  <a href="#masthead" class="wordmark" id="wordmark"></a>
-  <nav class="topnav" id="navLinks" aria-label="Sections"></nav>
+  <a href="#masthead" class="wordmark" id="wordmark">Prasun Shiwakoti</a>
+  <nav class="topnav" id="navLinks" aria-label="Sections"><a href="#about" data-nav="#about">About</a><a href="#work" data-nav="#work">Work</a><a href="#experience" data-nav="#experience">Experience</a><a href="#background" data-nav="#background">Background</a><a href="#contact" data-nav="#contact">Contact</a></nav>
   <button class="menubtn" id="menuToggle" aria-expanded="false" aria-controls="mmenu">Index</button>
 </header>
 
 <!-- mobile index sheet -->
 <div class="sheet" id="mmenu" hidden>
   <button class="sheet-close" id="menuClose" aria-label="Close index">Close</button>
-  <nav id="mmenuLinks" aria-label="Sections"></nav>
+  <nav id="mmenuLinks" aria-label="Sections"><a href="#about" data-nav="#about">About</a><a href="#work" data-nav="#work">Work</a><a href="#experience" data-nav="#experience">Experience</a><a href="#background" data-nav="#background">Background</a><a href="#contact" data-nav="#contact">Contact</a></nav>
 </div>
 
 <main>
 
 <!-- ─────────────── MASTHEAD ─────────────── -->
 <section class="masthead" id="masthead">
-  <div class="dateline" id="dateline"></div>
+  <div class="dateline" id="dateline">
+    <span>Kathmandu, Nepal</span>
+    <span>27.7172° N, 85.3240° E</span>
+    <span>Local time <span id="clock">--:--</span></span>
+    <span class="live">Open to work</span>
+    <span>Full Stack and Machine Learning Developer</span>
+  </div>
   <hr class="rule">
-  <h1 class="mast-name" id="mastName"></h1>
+  <!-- the line break between the masks is deliberate: .ln is display:block so
+       it renders as nothing, but it keeps the heading reading "Prasun
+       Shiwakoti" rather than "PrasunShiwakoti" to a crawler or a screen reader -->
+  <h1 class="mast-name" id="mastName"><span class="ln"><span>Prasun</span></span>
+    <span class="ln"><span>Shiwakoti</span></span></h1>
   <hr class="rule rule-heavy">
   <div class="mast-body">
-    <p class="lede dropcap" id="mastLede"></p>
+    <p class="lede dropcap" id="mastLede">Most of my work is backend — the part of a product nobody sees, and the part that decides whether the rest of it holds. I came to it through machine learning and stayed for the engineering. What I like is taking something vague and half-specified and turning it into something people can actually rely on.</p>
     <div class="mast-aside">
-      <p class="lede-sub" id="mastLedeSub"></p>
-      <div class="mast-links" id="mastLinks"></div>
+      <p class="lede-sub" id="mastLedeSub">Before that: a funded AI fellowship, a stock-forecasting model that fused news sentiment with price data, and a transformer built from scratch because reading about attention wasn’t doing it.</p>
+      <div class="mast-links" id="mastLinks"><a href="#work">Selected work <span class="arw">&rarr;</span></a><a href="mailto:prasunshiwakoti@gmail.com">Email me <span class="arw">&rarr;</span></a></div>
     </div>
   </div>
 </section>
 
 <!-- ─────────────── TICKER ─────────────── -->
 <div class="ticker" aria-hidden="true">
-  <div class="ticker-track" id="ticker"></div>
+  <div class="ticker-track" id="ticker"><span>Python</span><span>Django</span><span>FastAPI</span><span>Flask</span><span>React</span><span>PostgreSQL</span><span>Docker</span><span>CI/CD</span><span>PyTorch</span><span>TensorFlow</span><span>scikit-learn</span><span>Pandas</span><span>SQL</span><span>Linux</span><span>REST APIs</span><span>Python</span><span>Django</span><span>FastAPI</span><span>Flask</span><span>React</span><span>PostgreSQL</span><span>Docker</span><span>CI/CD</span><span>PyTorch</span><span>TensorFlow</span><span>scikit-learn</span><span>Pandas</span><span>SQL</span><span>Linux</span><span>REST APIs</span></div>
 </div>
 
 <!-- ─────────────── ABOUT ─────────────── -->
@@ -60,25 +407,33 @@
   <div class="sec-head" data-reveal>
     <span class="folio">02</span>
     <h2 class="sec-title">About</h2>
-    <p class="sec-note" id="aboutNote"></p>
+    <p class="sec-note" id="aboutNote">Who is writing, and why you might care.</p>
   </div>
 
   <div class="about-grid">
     <figure class="plate" data-reveal>
       <div class="plate-img">
-        <img id="portrait" alt="" width="880" height="1100" loading="lazy" decoding="async"
+        <img id="portrait" src="profile-880.webp" srcset="profile-440.webp 440w, profile-880.webp 880w" sizes="(max-width: 860px) 340px, 410px"
+             alt="Prasun Shiwakoti, backend and full-stack developer, in Kathmandu"
+             width="880" height="1100" loading="lazy" decoding="async"
              onerror="this.style.display='none';this.nextElementSibling.hidden=false;">
+        <div class="plate-initials" hidden aria-hidden="true">PS</div>
       </div>
-      <figcaption id="plateCaption"></figcaption>
+      <figcaption id="plateCaption"><span>Fig. 1</span><span>Kathmandu, 2025</span></figcaption>
     </figure>
     <div class="about-copy">
-      <p class="about-lead" id="aboutLead" data-reveal></p>
-      <p class="about-sub" id="aboutSub" data-reveal></p>
+      <p class="about-lead" id="aboutLead" data-reveal>I like owning a problem end to end — schema, queries, endpoints, and the bit of CSS at the end that nobody volunteers for. Most days that is Python and Django. Some days it is React, or Docker, or a model that refuses to converge.</p>
+      <p class="about-sub" id="aboutSub" data-reveal>What I actually care about is software that stays up, says something useful when it doesn’t, and gets shipped rather than demoed. Outside of work I am reading machine learning papers with varying success, running my college’s IT club, or taking something apart to see how it fits together.</p>
     </div>
   </div>
 
-  <!-- ledger strip -->
-  <div class="ledger" id="ledger" data-reveal></div>
+  <!-- ledger strip. Numbers are final in the markup; the count-up only animates -->
+  <div class="ledger" id="ledger" data-reveal>
+    <div class="ledger-cell"><div class="ledger-num" data-count="40" data-suffix="+">40+</div><div class="ledger-label">Projects built</div></div>
+    <div class="ledger-cell"><div class="ledger-num" data-count="6" data-suffix="+">6+</div><div class="ledger-label">Years writing code</div></div>
+    <div class="ledger-cell"><div class="ledger-num" data-count="20" data-suffix="+">20+</div><div class="ledger-label">Technologies used</div></div>
+    <div class="ledger-cell"><div class="ledger-num">∞</div><div class="ledger-label">Cups of coffee per merge</div></div>
+  </div>
 </section>
 
 <!-- ─────────────── WORK ─────────────── -->
@@ -88,7 +443,86 @@
     <h2 class="sec-title">Selected work</h2>
     <p class="sec-note">Six things worth showing. Source for all of them is on GitHub.</p>
   </div>
-  <ol class="index" id="workIndex"></ol>
+  <ol class="index" id="workIndex">
+    <li data-reveal>
+    <a class="index-row" href="https://github.com/Prasun-Shiwakoti/Social-Media-Manager-AI" target="_blank" rel="noopener noreferrer">
+    <div class="index-inner">
+    <span class="index-num">01</span>
+    <div class="index-main">
+    <h3 class="index-title">AI Social-Media Automation<span class="arw">&nearr;</span></h3>
+    <span class="index-tags"><span>Django</span><span>React</span><span>RAG</span><span>LSTM</span></span>
+    </div>
+    <span class="index-desc">Automates content creation and scheduling, with sentiment analysis to read how an audience actually responds.</span>
+    <span class="index-year">2025</span>
+    </div>
+    </a>
+    </li>
+    <li data-reveal>
+    <a class="index-row" href="https://github.com/Prasun-Shiwakoti/Multi-Agent-Competitive-Intelligence-Research-System" target="_blank" rel="noopener noreferrer">
+    <div class="index-inner">
+    <span class="index-num">02</span>
+    <div class="index-main">
+    <h3 class="index-title">Multi-Agent Research System<span class="arw">&nearr;</span></h3>
+    <span class="index-tags"><span>Multi-Agent</span><span>LLM</span><span>Python</span></span>
+    </div>
+    <span class="index-desc">Coordinated LLM agents that gather, cross-check and synthesise competitive market intelligence.</span>
+    <span class="index-year">2025</span>
+    </div>
+    </a>
+    </li>
+    <li data-reveal>
+    <a class="index-row" href="https://github.com/Prasun-Shiwakoti/News-Powered-Stock-Market-Analysis" target="_blank" rel="noopener noreferrer">
+    <div class="index-inner">
+    <span class="index-num">03</span>
+    <div class="index-main">
+    <h3 class="index-title">News-Powered Market Analysis<span class="arw">&nearr;</span></h3>
+    <span class="index-tags"><span>LSTM</span><span>XGBoost</span><span>Pandas</span></span>
+    </div>
+    <span class="index-desc">Fuses news sentiment with price data using LSTM and XGBoost to forecast market movement. My fellowship capstone.</span>
+    <span class="index-year">2025</span>
+    </div>
+    </a>
+    </li>
+    <li data-reveal>
+    <a class="index-row" href="https://github.com/Prasun-Shiwakoti/transformer-from-scratch" target="_blank" rel="noopener noreferrer">
+    <div class="index-inner">
+    <span class="index-num">04</span>
+    <div class="index-main">
+    <h3 class="index-title">Transformer From Scratch<span class="arw">&nearr;</span></h3>
+    <span class="index-tags"><span>PyTorch</span><span>NLP</span><span>From scratch</span></span>
+    </div>
+    <span class="index-desc">A transformer built from first principles — attention, encoding and training, with no high-level shortcuts to hide behind.</span>
+    <span class="index-year">2024</span>
+    </div>
+    </a>
+    </li>
+    <li data-reveal>
+    <a class="index-row" href="https://github.com/Prasun-Shiwakoti/CoCo" target="_blank" rel="noopener noreferrer">
+    <div class="index-inner">
+    <span class="index-num">05</span>
+    <div class="index-main">
+    <h3 class="index-title">CoCo, AI Study Assistant<span class="arw">&nearr;</span></h3>
+    <span class="index-tags"><span>Django</span><span>React</span><span>ML</span><span>Product</span></span>
+    </div>
+    <span class="index-desc">A study companion that adapts its explanations and practice questions to how a particular person learns.</span>
+    <span class="index-year">2024</span>
+    </div>
+    </a>
+    </li>
+    <li data-reveal>
+    <a class="index-row" href="https://github.com/Prasun-Shiwakoti/heart-disease-api" target="_blank" rel="noopener noreferrer">
+    <div class="index-inner">
+    <span class="index-num">06</span>
+    <div class="index-main">
+    <h3 class="index-title">Heart-Disease Prediction API<span class="arw">&nearr;</span></h3>
+    <span class="index-tags"><span>FastAPI</span><span>scikit-learn</span><span>REST</span></span>
+    </div>
+    <span class="index-desc">A production REST API serving an ML model for cardiac risk prediction from patient data.</span>
+    <span class="index-year">2023</span>
+    </div>
+    </a>
+    </li>
+  </ol>
 </section>
 
 <!-- ─────────────── EXPERIENCE ─────────────── -->
@@ -98,7 +532,24 @@
     <h2 class="sec-title">Experience</h2>
     <p class="sec-note">Where the shipping has actually happened.</p>
   </div>
-  <div class="entries" id="entries"></div>
+  <div class="entries" id="entries">
+    <article class="entry" data-reveal>
+    <div class="entry-when">Sept 2025<span class="until">Present</span></div>
+    <div>
+    <h3 class="entry-role">Full-Stack Web Developer</h3>
+    <span class="entry-org">Magniment IT Pvt. Ltd.</span>
+    <ul><li>Independently run a high-volume WhatsApp marketing platform serving 500+ active businesses and 50,000+ messages a day.</li><li>Resolved critical architectural flaws and cleared 40+ production bugs left behind by the previous team.</li><li>Architected and shipped a full e-commerce website builder in Django — drag-and-drop UI, inventory, payments — letting 100+ non-technical users launch stores.</li></ul>
+    </div>
+    </article>
+    <article class="entry" data-reveal>
+    <div class="entry-when">May 2025<span class="until">Dec 2025</span></div>
+    <div>
+    <h3 class="entry-role">AI Fellow</h3>
+    <span class="entry-org">Fusemachines AI Fellowship 2025</span>
+    <ul><li>Completed a fully funded six-month AI Microdegree, capstone on news-powered stock market analysis using LSTM and XGBoost.</li><li>Built production ML systems on 12-Factor methodology, Docker and GitHub Actions CI/CD, applying MLOps for versioning and monitoring.</li><li>Engineered end-to-end data pipelines over 10,000+ records with Pandas and SQL, plus dashboards in Matplotlib and Seaborn.</li></ul>
+    </div>
+    </article>
+  </div>
 </section>
 
 <!-- ─────────────── BACKGROUND ─────────────── -->
@@ -110,12 +561,67 @@
   </div>
 
   <div class="bg-grid">
-    <div class="bg-col" id="eduBlock" data-reveal></div>
-    <div class="bg-col" id="hlBlock" data-reveal></div>
+    <div class="bg-col" id="eduBlock" data-reveal>
+      <h3>Education</h3>
+      <div class="bg-item">
+      <div class="t">B.E. Computer Engineering</div>
+      <div class="m">Kathmandu Engineering College · 2023 — Present</div>
+      <div class="d">Full scholarship on an IOE entrance rank of 320, currently averaging 83%. President of the KEC IT Club.</div>
+      </div>
+    </div>
+    <div class="bg-col" id="hlBlock" data-reveal>
+      <h3>Earlier</h3>
+      <div class="bg-item">
+      <div class="t">Hackathon Winner, Provathon 2020</div>
+      <div class="m">CSIT Association of Nepal</div>
+      <div class="d">Full-stack health monitoring app with an ML model predicting cardiac arrest events from real-time data.</div>
+      </div>
+      <div class="bg-item">
+      <div class="t">President, CS Club</div>
+      <div class="m">Kathmandu Model College · 2020 — 2022</div>
+      <div class="d">Drove a 25% rise in sign-ups and ran bootcamps on cybersecurity, Python and web development.</div>
+      </div>
+    </div>
   </div>
 
   <h3 class="sub-label" data-reveal>Certifications</h3>
-  <ul class="certs" id="certs"></ul>
+  <ul class="certs" id="certs">
+    <li data-reveal>
+    <a class="cert-row" href="https://s3.amazonaws.com/fuseclassroom-resources-prod/student-certificates/Microdegree%E2%84%A2+in+Artificial+Intelligence+2025-PRASUN+SHIWKAOTI.pdf" target="_blank" rel="noopener noreferrer">
+    <span class="cert-issuer">Fusemachines</span>
+    <span class="cert-title">Microdegree™ in Artificial Intelligence</span>
+    <span class="cert-year">2025</span>
+    </a>
+    </li>
+    <li data-reveal>
+    <a class="cert-row" href="https://drive.google.com/drive/folders/17zi1_Wkko2qgP2ovTAr1cvHg_1dhdsCl?usp=sharing" target="_blank" rel="noopener noreferrer">
+    <span class="cert-issuer">Stanford University</span>
+    <span class="cert-title">Machine Learning Specialization</span>
+    <span class="cert-year">2024</span>
+    </a>
+    </li>
+    <li data-reveal>
+    <a class="cert-row" href="https://drive.google.com/file/d/1KIbWk09eReShq8HwVO2PnMNuOdtDoLJ8/view?usp=drive_link" target="_blank" rel="noopener noreferrer">
+    <span class="cert-issuer">Udemy</span>
+    <span class="cert-title">Complete Web Development Bootcamp</span>
+    <span class="cert-year">2023</span>
+    </a>
+    </li>
+    <li data-reveal>
+    <a class="cert-row" href="https://drive.google.com/drive/folders/1jWizIKJ_6pFDRU-CmtcS6hrHVxgYGAL3?usp=drive_link" target="_blank" rel="noopener noreferrer">
+    <span class="cert-issuer">Programiz</span>
+    <span class="cert-title">Master DSA with Python</span>
+    <span class="cert-year">2023</span>
+    </a>
+    </li>
+    <li data-reveal>
+    <a class="cert-row" href="https://drive.google.com/drive/folders/1z050VClWnl4fpkyDY90hYjqVUScHnkPM?usp=drive_link" target="_blank" rel="noopener noreferrer">
+    <span class="cert-issuer">Kaggle, Programiz</span>
+    <span class="cert-title">Python Programming</span>
+    <span class="cert-year">2022</span>
+    </a>
+    </li>
+  </ul>
 </section>
 
 <!-- ─────────────── CONTACT ─────────────── -->
@@ -123,9 +629,39 @@
   <!-- no section head here: the headline is the heading. Just the sheet rule,
        so the section still opens on the same line every other one does. -->
   <hr class="rule rule-heavy contact-rule" data-reveal>
-  <h2 class="contact-head" id="contactHead" data-reveal></h2>
-  <p class="contact-note" id="contactNote" data-reveal></p>
-  <ul class="contact-list" id="contactList"></ul>
+  <h2 class="contact-head" id="contactHead" data-reveal><span class="ln"><span>Drop me</span></span>
+    <span class="ln"><span>a <em class="accent">line.</em></span></span></h2>
+  <p class="contact-note" id="contactNote" data-reveal>I read everything that arrives. I reply to most of it, usually within a day or two.</p>
+  <ul class="contact-list" id="contactList">
+    <li data-reveal>
+    <a href="mailto:prasunshiwakoti@gmail.com">
+    <span class="kind">Email</span>
+    <span class="val">prasunshiwakoti@gmail.com</span>
+    <span class="arw">&rarr;</span>
+    </a>
+    </li>
+    <li data-reveal>
+    <a href="tel:+9779861812959">
+    <span class="kind">Phone</span>
+    <span class="val">+977 9861812959</span>
+    <span class="arw">&rarr;</span>
+    </a>
+    </li>
+    <li data-reveal>
+    <a href="https://github.com/Prasun-Shiwakoti" target="_blank" rel="me noopener noreferrer">
+    <span class="kind">GitHub</span>
+    <span class="val">Prasun-Shiwakoti</span>
+    <span class="arw">&nearr;</span>
+    </a>
+    </li>
+    <li data-reveal>
+    <a href="https://www.linkedin.com/in/prasun-shiwakoti-9570581b3/" target="_blank" rel="me noopener noreferrer">
+    <span class="kind">LinkedIn</span>
+    <span class="val">prasun-shiwakoti</span>
+    <span class="arw">&nearr;</span>
+    </a>
+    </li>
+  </ul>
 </section>
 
 </main>
@@ -133,13 +669,12 @@
 <footer class="colophon">
   <hr class="rule">
   <div class="colophon-grid">
-    <span id="footCopy"></span>
-    <span id="footLoc"></span>
-    <span id="footNote"></span>
+    <span id="footCopy">© 2026 Prasun Shiwakoti</span>
+    <span id="footLoc">Kathmandu, Nepal · <span id="clockFoot">--:--</span></span>
+    <span id="footNote">Built with too much coffee</span>
   </div>
 </footer>
 
-<script src="config.js"></script>
-<script src="main.js"></script>
+<script src="main.js?v=1.1"></script>
 </body>
 </html>

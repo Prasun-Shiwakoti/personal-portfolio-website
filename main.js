@@ -1,232 +1,19 @@
 /* ============================================================================
-   main.js — renders the page from CONFIG, then wires up the small amount of
-   behaviour that CSS cannot do on its own.
+   main.js — behaviour only.
+
+   Every word on this page lives in index.html. Nothing here creates content,
+   so the site reads identically to a crawler, to a text browser, and to anyone
+   whose JavaScript failed to load. What follows is enhancement and nothing
+   more: reveals, a count-up, the current-section underline, the mobile index
+   sheet, and a clock.
 
    No framework, no animation library. Reveals are CSS transitions switched on
    by an IntersectionObserver, which means nothing is recalculated while you
    scroll and nothing can be left invisible by a stale scroll measurement.
    ============================================================================ */
 
-/* ══════════════════════════════ A. RENDER ══════════════════════════════ */
-
-/* wrap each line of a headline in an overflow mask so it can rise into place */
-function maskedLines(lines) {
-	return lines
-		.map((l) => `<span class="ln"><span>${lineSegments(l)}</span></span>`)
-		.join("");
-}
-
-/* <title>, meta description, wordmark */
-function renderMeta() {
-	const p = CONFIG.profile;
-	document.title = CONFIG.meta.title;
-	document
-		.getElementById("metaDesc")
-		.setAttribute("content", CONFIG.meta.description);
-	document.getElementById("wordmark").textContent =
-		`${p.firstName} ${p.lastName}`;
-}
-
-/* topbar links and the mobile index sheet */
-function renderNav() {
-	const links = CONFIG.nav
-		.map((n) => `<a href="${n.href}" data-nav="${n.href}">${n.label}</a>`)
-		.join("");
-	document.getElementById("navLinks").innerHTML = links;
-	document.getElementById("mmenuLinks").innerHTML = links;
-}
-
-/* masthead: dateline, name, lede, aside links */
-function renderMasthead() {
-	const p = CONFIG.profile,
-		m = CONFIG.masthead;
-
-	document.getElementById("dateline").innerHTML = `
-		<span>${p.location}</span>
-		<span>${p.coords}</span>
-		<span>Local time <span id="clock">--:--</span></span>
-		<span class="live">${p.availableLabel}</span>
-		<span>${p.roleTag}</span>`;
-
-	document.getElementById("mastName").innerHTML = maskedLines(m.name);
-	document.getElementById("mastLede").textContent = m.lede;
-	document.getElementById("mastLedeSub").textContent = m.ledeSub;
-
-	document.getElementById("mastLinks").innerHTML = m.links
-		.map(
-			(l) =>
-				`<a href="${l.href}">${l.label} <span class="arw">&rarr;</span></a>`,
-		)
-		.join("");
-}
-
-/* about: portrait plate, caption, prose */
-function renderAbout() {
-	const p = CONFIG.profile,
-		a = CONFIG.about;
-
-	document.getElementById("aboutNote").textContent = a.note;
-
-	const img = document.getElementById("portrait");
-	img.src = p.photo;
-	if (p.photoSrcset) img.srcset = p.photoSrcset;
-	if (p.photoSizes) img.sizes = p.photoSizes;
-	img.alt = `${p.firstName} ${p.lastName}`;
-	
-
-	document.getElementById("plateCaption").innerHTML =
-		`<span>Fig. 1</span><span>${a.caption}</span>`;
-
-	document.getElementById("aboutLead").textContent = a.lead;
-	document.getElementById("aboutSub").textContent = a.sub;
-}
-
-/* the ledger strip. Numeric cells get data-count and tick up when seen */
-function renderLedger() {
-	document.getElementById("ledger").innerHTML = CONFIG.stats
-		.map((s) => {
-			/* the finished value goes straight into the markup, so the ledger
-			   reads correctly even if the count-up never runs */
-			const num =
-				s.value === null
-					? `<div class="ledger-num">${s.display}</div>`
-					: `<div class="ledger-num" data-count="${s.value}" data-suffix="${s.suffix || ""}">${s.value}${s.suffix || ""}</div>`;
-			return `<div class="ledger-cell">${num}<div class="ledger-label">${s.label}</div></div>`;
-		})
-		.join("");
-}
-
-/* the skills ticker, rendered twice so the CSS marquee loops seamlessly */
-function renderTicker() {
-	const set = CONFIG.kinetic.map((k) => `<span>${k}</span>`).join("");
-	document.getElementById("ticker").innerHTML = set + set;
-}
-
-/* selected work, as a numbered index rather than cards */
-function renderWork() {
-	document.getElementById("workIndex").innerHTML = CONFIG.projects
-		.map(
-			(p) => `
-		<li data-reveal>
-			<a class="index-row" href="${p.url}" target="_blank" rel="noopener">
-				<div class="index-inner">
-					<span class="index-num">${p.n}</span>
-					<span class="index-main">
-						<span class="index-title">${p.t}<span class="arw">&nearr;</span></span>
-						<span class="index-tags">${p.tags.map((t) => `<span>${t}</span>`).join("")}</span>
-					</span>
-					<span class="index-desc">${p.d}</span>
-					<span class="index-year">${p.year}</span>
-				</div>
-			</a>
-		</li>`,
-		)
-		.join("");
-}
-
-/* experience, dates in the margin */
-function renderExperience() {
-	document.getElementById("entries").innerHTML = CONFIG.experience
-		.map(
-			(x) => `
-		<article class="entry" data-reveal>
-			<div class="entry-when">${x.when}<span class="until">${x.until}</span></div>
-			<div>
-				<h3 class="entry-role">${x.role}</h3>
-				<span class="entry-org">${x.org}</span>
-				<ul>${x.points.map((pt) => `<li>${pt}</li>`).join("")}</ul>
-			</div>
-		</article>`,
-		)
-		.join("");
-}
-
-/* education, earlier highlights, certifications */
-function renderBackground() {
-	const e = CONFIG.education;
-
-	document.getElementById("eduBlock").innerHTML = `
-		<h4>Education</h4>
-		<div class="bg-item">
-			<div class="t">${e.degree}</div>
-			<div class="m">${e.meta}</div>
-			<div class="d">${e.detail}</div>
-		</div>`;
-
-	document.getElementById("hlBlock").innerHTML = `
-		<h4>Earlier</h4>
-		${CONFIG.highlights
-			.map(
-				(h) => `
-			<div class="bg-item">
-				<div class="t">${h.title}</div>
-				<div class="m">${h.meta}</div>
-				<div class="d">${h.detail}</div>
-			</div>`,
-			)
-			.join("")}`;
-
-	document.getElementById("certs").innerHTML = CONFIG.certs
-		.map(
-			(c) => `
-		<li data-reveal>
-			<a class="cert-row" href="${c.url}" target="_blank" rel="noopener">
-				<span class="cert-issuer">${c.issuer}</span>
-				<span class="cert-title">${c.title}</span>
-				<span class="cert-year">${c.year}</span>
-			</a>
-		</li>`,
-		)
-		.join("");
-}
-
-/* contact block */
-function renderContact() {
-	const p = CONFIG.profile,
-		c = CONFIG.contact;
-
-	document.getElementById("contactHead").innerHTML = maskedLines(c.headline);
-	document.getElementById("contactNote").textContent = c.note;
-
-	const rows = [
-		{ kind: "Email", val: p.email, href: `mailto:${p.email}`, out: false },
-		{ kind: "Phone", val: p.phone, href: `tel:${p.phoneHref}`, out: false },
-		{ kind: "GitHub", val: "Prasun-Shiwakoti", href: p.github, out: true },
-		{ kind: "LinkedIn", val: "prasun-shiwakoti", href: p.linkedin, out: true },
-	];
-
-	document.getElementById("contactList").innerHTML = rows
-		.map(
-			(r) => `
-		<li data-reveal>
-			<a href="${r.href}"${r.out ? ' target="_blank" rel="noopener"' : ""}>
-				<span class="kind">${r.kind}</span>
-				<span class="val">${r.val}</span>
-				<span class="arw">${r.out ? "&nearr;" : "&rarr;"}</span>
-			</a>
-		</li>`,
-		)
-		.join("");
-
-	document.getElementById("footCopy").textContent =
-		`© ${new Date().getFullYear()} ${p.firstName} ${p.lastName}`;
-	document.getElementById("footLoc").innerHTML =
-		`${p.location} · <span id="clockFoot">--:--</span>`;
-	document.getElementById("footNote").textContent = c.footerNote;
-}
-
-renderMeta();
-renderNav();
-renderMasthead();
-renderAbout();
-renderLedger();
-renderTicker();
-renderWork();
-renderExperience();
-renderBackground();
-renderContact();
-
-/* ══════════════════════════════ B. BEHAVIOUR ══════════════════════════════ */
+/* tells the safety net in index.html to stand down */
+window.__enhanced = true;
 
 const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -397,10 +184,10 @@ const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 	});
 })();
 
-/* ---- live local time, in the dateline ---- */
+/* ---- live local time, in the dateline and the colophon ---- */
 (function () {
 	const fmt = new Intl.DateTimeFormat("en-GB", {
-		timeZone: CONFIG.profile.timezone,
+		timeZone: "Asia/Kathmandu",
 		hour: "2-digit",
 		minute: "2-digit",
 	});
@@ -413,4 +200,16 @@ const REDUCED = matchMedia("(prefers-reduced-motion: reduce)").matches;
 	};
 	tick();
 	setInterval(tick, 15000);
+})();
+
+/* ---- the copyright year is baked into the markup so a crawler sees it;
+        this keeps it honest without anyone having to remember ---- */
+(function () {
+	const el = document.getElementById("footCopy");
+	if (el) {
+		el.textContent = el.textContent.replace(
+			/\d{4}/,
+			new Date().getFullYear(),
+		);
+	}
 })();
