@@ -1,0 +1,1261 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prasun Shiwakoti, the game version</title>
+<meta name="description" content="Prasun Shiwakoti builds web applications and AI agents from Kathmandu, Nepal. Lately: Buildor, a website builder with 100+ active users.">
+<link rel="canonical" href="https://prasunshiwakoti.com.np/">
+<meta name="author" content="Prasun Shiwakoti">
+<meta name="theme-color" content="#1a2140">
+<meta name="color-scheme" content="dark">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Prasun Shiwakoti">
+<meta property="og:title" content="Prasun Shiwakoti, the game version">
+<meta property="og:description" content="My portfolio as a game: pick a level and fly to a mountain peak for each project.">
+<meta property="og:url" content="https://game-version.prasunshiwakoti.com.np/">
+<meta property="og:image" content="https://game-version.prasunshiwakoti.com.np/og.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A game start screen with Prasun Shiwakoti's name over snowy mountains at dawn">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Prasun Shiwakoti, the game version">
+<meta name="twitter:description" content="My portfolio as a game: pick a level and fly to a mountain peak for each project.">
+<meta name="twitter:image" content="https://game-version.prasunshiwakoti.com.np/og.png">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Saira:wdth,wght@50..125,100..900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #f3f5f8;
+  --ink-2: #c8ced8;
+  --ink-3: #98a1b2;
+  --mari: #f5a524;
+  --on-mari: #1d1606;
+  --line: rgba(243, 245, 248, .2);
+  --line-2: rgba(243, 245, 248, .42);
+  --wash: rgba(243, 245, 248, .07);
+  --well: rgba(6, 9, 20, .5);
+  --bg: #1a2140;
+  --pad: clamp(20px, 5vw, 72px);
+  --fs: 1;
+  --title: "Saira", "Arial Narrow", system-ui, sans-serif;
+  --body: "Atkinson Hyperlegible", system-ui, sans-serif;
+  --ease: cubic-bezier(.2, .8, .2, 1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: calc(100% * var(--fs)); background: var(--bg); }
+body { min-height: 100svh; background: var(--bg); color: var(--ink); font: 400 1.125rem/1.6 var(--body); -webkit-font-smoothing: antialiased; }
+a { color: inherit; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; text-align: left; }
+img { display: block; max-width: 100%; }
+:focus-visible { outline: 2px solid var(--mari); outline-offset: 4px; }
+ul, ol { list-style: none; }
+
+#world, .splash, .bar, .labels, .marker, .crumb { display: none; }
+
+/* ---------- corner controls ---------- */
+.corner { position: fixed; z-index: 30; top: 14px; right: var(--pad); display: flex; align-items: center; gap: 14px; font-size: .92rem; }
+.corner a { color: var(--ink-2); text-decoration: none; padding: 8px 2px; }
+.corner a:hover { color: var(--ink); }
+.snd { display: inline-flex; align-items: center; gap: 8px; padding: 8px 10px; color: var(--ink-2); }
+.snd:hover { color: var(--ink); }
+.snd svg { width: 20px; height: 20px; }
+.snd .x { display: none; }
+.snd.off .waves { display: none; }
+.snd.off .x { display: inline; }
+
+/* ---------- title ---------- */
+.title { padding: 72px var(--pad) 24px; }
+.title h1 { font: 300 clamp(2.6rem, min(6vw, 10vh), 5.8rem)/1.04 var(--title); font-variation-settings: "wdth" 120; letter-spacing: .01em; }
+.title h1 .w { display: inline-block; white-space: nowrap; }
+.title h1 .l { display: inline-block; font-variation-settings: "wdth" 120; transition: font-variation-settings 1.2s var(--ease), opacity .8s ease; transition-delay: calc(.3s + var(--i) * 45ms); }
+.tag { margin-top: 18px; font-size: 1.2rem; color: var(--ink-2); max-width: 44ch; }
+.status { margin-top: 10px; display: flex; align-items: center; gap: 12px; font-size: 1rem; color: var(--ink-2); }
+.status i { flex: none; width: 9px; height: 9px; background: var(--mari); transform: rotate(45deg); }
+
+/* ---------- menu ---------- */
+.menu ul { display: flex; flex-wrap: wrap; gap: 6px 26px; padding: 0 var(--pad) 32px; }
+.menu a { display: block; font: 500 clamp(1.4rem, 2.3vw, 1.85rem)/1.3 var(--title); font-variation-settings: "wdth" 104; letter-spacing: .01em; color: var(--ink-2); text-decoration: none; }
+.menu a:hover { color: var(--ink); }
+
+/* ---------- screens (plain page without JS) ---------- */
+.screen { padding: 48px var(--pad); border-top: 1px solid var(--line); }
+.screen-head { margin-bottom: clamp(22px, 4.5vh, 40px); max-width: 62ch; }
+.screen-head h2 { font: 600 clamp(2.2rem, 4vw, 3.3rem)/1.15 var(--title); font-variation-settings: "wdth" 116; letter-spacing: .01em; }
+.screen-head p { margin-top: 8px; color: var(--ink-2); font-size: 1.15rem; }
+h3 { font: 600 2rem/1.2 var(--title); font-variation-settings: "wdth" 112; }
+.say { font-size: 1.2rem; line-height: 1.5; color: var(--ink); }
+
+/* a row that shows a diamond when it is the current choice */
+.mk { position: relative; padding-left: 1.9rem; outline: none; }
+.mk::before { content: ""; position: absolute; left: .5rem; top: 50%; width: .62rem; height: .62rem; margin-top: -.31rem; background: var(--mari); transform: rotate(45deg) scale(0); transition: transform .22s var(--ease); }
+.mk:focus::before, .mk:hover::before { transform: rotate(45deg) scale(1); }
+.mk:focus { background: var(--wash); }
+
+.act { display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 13px 20px; border: 1.5px solid var(--ink); border-radius: 3px; font: 600 1.02rem/1 var(--title); font-variation-settings: "wdth" 108; letter-spacing: .02em; text-decoration: none; transition: background .2s, color .2s, border-color .2s; }
+.act:hover, .act:focus { background: var(--ink); color: #141a2c; outline: none; }
+.act.primary { background: var(--mari); border-color: var(--mari); color: var(--on-mari); }
+.act.primary:hover, .act.primary:focus { background: var(--ink); border-color: var(--ink); color: #141a2c; }
+.act:focus-visible { outline: 2px solid var(--mari); outline-offset: 4px; }
+.acts { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 22px; }
+
+.sheet { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 22px; margin-top: 16px; }
+.sheet div { display: contents; }
+.sheet dt { color: var(--ink-3); }
+
+/* continue */
+.save { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: clamp(20px, 3vw, 34px); align-items: start; max-width: 720px; padding: clamp(18px, 2.6vw, 28px); border: 1px solid var(--line-2); border-radius: 3px; background: var(--well); }
+.save-art { color: var(--ink-2); }
+.save-art svg { display: block; width: 100%; height: auto; }
+.save-slot { display: block; margin-bottom: 6px; font: 500 .95rem/1.4 var(--title); letter-spacing: .02em; color: var(--mari); }
+.save .say { margin-top: 8px; }
+
+/* levels */
+.lv-list { border-top: 1px solid var(--line); max-width: 420px; }
+.lvl { width: 100%; display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding-top: 12px; padding-bottom: 12px; padding-right: 10px; border-bottom: 1px solid var(--line); color: var(--ink-2); transition: color .2s, background .2s; }
+.lvl b { font: 500 1.18rem/1.3 var(--title); font-variation-settings: "wdth" 104; }
+.lvl span { font-size: .9rem; color: var(--ink-3); white-space: nowrap; }
+.lvl.mk::before { transform: rotate(45deg) scale(.55); background: transparent; box-shadow: inset 0 0 0 1.5px var(--ink-3); }
+.lvl[aria-current="true"] { color: var(--ink); }
+.lvl[aria-current="true"]::before { transform: rotate(45deg) scale(1); background: var(--mari); box-shadow: none; }
+.lv { margin-top: 28px; }
+.lv .when { display: block; font: 500 .95rem/1.4 var(--title); letter-spacing: .02em; color: var(--mari); }
+.lv h3 { margin-top: 2px; }
+.lv .say { margin-top: 10px; }
+.lv p { margin-top: 10px; color: var(--ink-2); }
+.lv .say { color: var(--ink); }
+.lv .stack { margin-top: 14px; font-size: .95rem; color: var(--ink-3); }
+
+/* skills */
+.tree { display: grid; gap: clamp(14px, 2.6vh, 26px); max-width: 1080px; }
+.branch { display: grid; grid-template-columns: minmax(230px, 300px) minmax(0, 1fr); gap: 4px 0; align-items: center; }
+.br { display: flex; align-items: center; gap: 14px; padding: 6px 12px 6px 0; font: 600 1.32rem/1.3 var(--title); font-variation-settings: "wdth" 108; color: var(--ink-2); outline: none; cursor: default; }
+.br i { flex: none; width: 15px; height: 15px; border: 2px solid var(--ink-3); transform: rotate(45deg); transition: background .2s, border-color .2s; }
+.twigs { display: flex; flex-wrap: wrap; align-items: center; row-gap: 8px; }
+.twigs li { display: flex; align-items: center; gap: 10px; color: var(--ink-3); font-size: .98rem; transition: color .2s; }
+.twigs li::before { content: ""; width: clamp(16px, 2.6vw, 38px); height: 1px; margin-right: 0; background: var(--line-2); transition: background .2s; }
+.twigs i { flex: none; width: 8px; height: 8px; background: var(--ink-3); transform: rotate(45deg); transition: background .2s; }
+.br-detail { grid-column: 1 / -1; padding-left: 29px; max-width: 72ch; color: var(--ink-2); }
+.br-detail .done { margin-top: 2px; font-size: .95rem; color: var(--ink-3); }
+.branch.sel .br { color: var(--ink); }
+.branch.sel .br i { background: var(--mari); border-color: var(--mari); }
+.branch.sel .twigs li { color: var(--ink); }
+.branch.sel .twigs li::before, .branch.sel .twigs i { background: var(--mari); }
+
+/* character */
+.tabs { display: flex; gap: clamp(18px, 3vw, 36px); border-bottom: 1px solid var(--line); margin-bottom: clamp(22px, 4vh, 34px); }
+.tab { position: relative; padding: 10px 0 12px; font: 500 1.15rem/1.3 var(--title); font-variation-settings: "wdth" 106; color: var(--ink-3); outline: none; }
+.tab:hover, .tab:focus { color: var(--ink); }
+.tab[aria-selected="true"] { color: var(--ink); }
+.tab[aria-selected="true"]::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--mari); }
+.tab:focus-visible::after { height: 3px; }
+.prof { display: grid; grid-template-columns: clamp(170px, 18vw, 240px) minmax(0, 58ch); gap: clamp(24px, 4vw, 52px); align-items: start; }
+.pic { aspect-ratio: 1; border-radius: 50%; overflow: hidden; outline: 2px solid var(--mari); outline-offset: 6px; margin: 8px; }
+.pic img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.prof .sheet { margin: 14px 0 18px; }
+.prof p { color: var(--ink-2); }
+.quests { max-width: 74ch; }
+.quests li { display: grid; grid-template-columns: 10rem minmax(0, 1fr); gap: 2px 26px; padding: 16px 0; border-top: 1px solid var(--line); }
+.quests li:first-child { border-top: 0; padding-top: 0; }
+.q-state { font: 500 .92rem/1.5 var(--title); letter-spacing: .02em; color: var(--ink-3); }
+.q-state.live { color: var(--mari); }
+.q-when { display: block; color: var(--ink-3); font-size: .95rem; }
+.quests b { display: block; font: 600 1.18rem/1.35 var(--title); font-variation-settings: "wdth" 106; }
+.quests p { color: var(--ink-2); }
+.ach { max-width: 64ch; }
+.ach li { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; gap: 2px 18px; align-items: start; padding: 14px 0; border-top: 1px solid var(--line); }
+.ach li:first-child { border-top: 0; padding-top: 0; }
+.ach .gem { width: 16px; height: 16px; margin: 6px 0 0 6px; background: var(--mari); transform: rotate(45deg); }
+.ach b { display: block; font: 600 1.15rem/1.35 var(--title); font-variation-settings: "wdth" 106; }
+.ach p { color: var(--ink-2); }
+.ach .yr { color: var(--ink-3); font-size: .95rem; }
+
+/* settings and new game */
+.opts { max-width: 780px; border-top: 1px solid var(--line); }
+.opt { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 24px; align-items: center; padding-top: 12px; padding-bottom: 12px; padding-right: 10px; border-bottom: 1px solid var(--line); cursor: pointer; user-select: none; }
+.opt:hover { background: var(--wash); }
+.o-name { font: 500 1.2rem/1.3 var(--title); font-variation-settings: "wdth" 106; }
+.o-help { grid-column: 1; color: var(--ink-3); font-size: .95rem; }
+.o-val { grid-row: 1 / span 2; grid-column: 2; display: flex; align-items: center; }
+.o-val output { min-width: 9ch; text-align: center; font: 600 1.1rem/1.3 var(--title); font-variation-settings: "wdth" 108; }
+.pick .o-val output { min-width: 15ch; }
+.o-val button { display: grid; place-items: center; width: 40px; height: 44px; color: var(--ink-3); transition: color .2s; }
+.o-val button:hover, .opt:focus .o-val button { color: var(--ink); }
+.o-val button:hover { color: var(--mari); }
+.o-val svg { width: 9px; height: 12px; }
+.field { display: grid; gap: 8px; padding: 14px 10px 16px 1.9rem; border-bottom: 1px solid var(--line); }
+.field label { font: 500 1.2rem/1.3 var(--title); font-variation-settings: "wdth" 106; }
+.field input, .field textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--line-2); border-radius: 3px; background: var(--well); color: var(--ink); font: 400 1.05rem/1.5 var(--body); }
+.field textarea { min-height: 92px; resize: vertical; }
+.field input::placeholder, .field textarea::placeholder { color: var(--ink-3); }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--mari); }
+.ng-go { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 22px; }
+.ng-go p { color: var(--ink-3); font-size: .98rem; }
+
+/* exit */
+.quit { max-width: 600px; }
+.quit ul { border-top: 1px solid var(--line); }
+.q-row { width: 100%; display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 4px 18px; padding-top: 14px; padding-bottom: 14px; padding-right: 10px; border-bottom: 1px solid var(--line); text-decoration: none; font: 500 1.2rem/1.3 var(--title); font-variation-settings: "wdth" 106; }
+.q-row span { font: 400 1rem/1.4 var(--body); color: var(--ink-2); }
+
+footer.plain { padding: 32px var(--pad) 48px; color: var(--ink-3); font-size: .95rem; border-top: 1px solid var(--line); }
+
+/* =====================================================================
+   Game mode (JavaScript on)
+   ===================================================================== */
+.js body { height: 100svh; overflow: hidden; }
+.js #world { display: block; position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
+.no-gl #world { display: none; }
+.js footer.plain { display: none; }
+
+/* splash: press any key */
+.js .splash { display: grid; position: fixed; inset: 0; z-index: 20; place-content: center; justify-items: center; gap: 20px; padding: 24px; text-align: center; transition: opacity .7s ease, visibility 0s linear .7s; }
+.splash-name { font: 300 clamp(2.6rem, 8vw, 7.4rem)/1.08 var(--title); font-variation-settings: "wdth" 125; letter-spacing: .02em; }
+.press { margin-top: 10px; font: 500 1.2rem/1.4 var(--title); font-variation-settings: "wdth" 112; letter-spacing: .05em; animation: pulse 2.6s ease-in-out infinite; }
+.press-sub { font-size: .95rem; color: var(--ink-3); }
+@keyframes pulse { 50% { opacity: .3; } }
+.splash:focus-visible { outline: none; }
+.splash:focus-visible .press { text-decoration: underline; text-decoration-color: var(--mari); text-underline-offset: 8px; }
+.started .splash { opacity: 0; visibility: hidden; pointer-events: none; }
+
+/* title and menu sit on the scene */
+.js .title { position: fixed; z-index: 5; left: var(--pad); top: clamp(30px, 8.5vh, 92px); max-width: min(48vw, 680px); padding: 0; pointer-events: none; transition: opacity .45s ease, transform .6s var(--ease); }
+.js:not(.started) .title h1 .l { font-variation-settings: "wdth" 50; opacity: 0; }
+.js:not(.started) .title .tag, .js:not(.started) .title .status { opacity: 0; }
+.js .title .tag, .js .title .status { transition: opacity .8s ease 1.1s; }
+.js .menu { position: fixed; z-index: 6; left: var(--pad); bottom: clamp(84px, 13vh, 168px); transition: opacity .35s ease, transform .5s var(--ease); }
+.js .menu ul { display: block; padding: 0; }
+.js .menu li { transition: opacity .5s ease, transform .6s var(--ease); transition-delay: calc(.9s + var(--i) * 60ms); }
+.js:not(.started) .menu li { opacity: 0; transform: translateX(-18px); }
+.js .menu a { padding: .26rem 0 .26rem 2.1rem; font-size: clamp(1.3rem, min(2.3vw, 3.6vh), 1.85rem); outline: none; transition: color .2s, transform .3s var(--ease), font-variation-settings .3s var(--ease); }
+.js .menu a:focus { color: var(--ink); transform: translateX(.5rem); font-variation-settings: "wdth" 118; }
+.js .marker { display: block; position: absolute; left: .4rem; top: 0; width: .72rem; height: .72rem; background: var(--mari); transform: translateY(var(--my, 0px)) rotate(45deg); transition: transform .32s var(--ease), opacity .3s ease 1s; }
+.js:not(.started) .marker { opacity: 0; }
+html:not([data-screen="title"]) .title, html:not([data-screen="title"]) .menu { opacity: 0; transform: translateX(-28px); pointer-events: none; }
+
+/* bottom bar: what the selected thing does, and the keys */
+.js .bar { display: flex; position: fixed; z-index: 7; left: 0; right: 0; bottom: 0; align-items: center; justify-content: space-between; gap: 24px; padding: 14px var(--pad); border-top: 1px solid var(--line); font-size: .95rem; color: var(--ink-2); transition: opacity .6s ease 1.2s; }
+.js:not(.started) .bar { opacity: 0; }
+.hintline { min-height: 1.5em; max-width: 60ch; }
+.keys { display: flex; flex: none; align-items: center; gap: 20px; }
+.key { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; color: var(--ink-2); }
+button.key:hover { color: var(--ink); }
+kbd { display: inline-grid; place-items: center; min-width: 30px; height: 28px; padding: 0 9px; border: 1px solid var(--line-2); border-radius: 4px; font: 600 .8rem/1 var(--title); color: var(--ink); }
+.key kbd + kbd { margin-left: -4px; }
+.build { flex: none; color: var(--ink-3); font-size: .85rem; }
+
+/* screens become full-viewport layers */
+.js .screen { position: fixed; inset: 0; z-index: 4; overflow-y: auto; overscroll-behavior: contain; padding: clamp(64px, 10vh, 104px) var(--pad) 110px; border: 0; opacity: 0; visibility: hidden; transform: translateX(32px); transition: opacity .3s ease, transform .5s var(--ease), visibility 0s linear .5s; }
+.js .screen.on { opacity: 1; visibility: visible; transform: none; transition: opacity .4s ease .12s, transform .6s var(--ease) .12s, visibility 0s; }
+.js .crumb { display: inline-flex; align-items: center; gap: 10px; margin: -10px 0 14px; padding: 8px 0; color: var(--ink-3); font-size: .95rem; }
+.js .crumb:hover { color: var(--ink); }
+.crumb svg { width: 9px; height: 12px; }
+
+.js .levels { display: grid; grid-template-columns: minmax(250px, 360px) minmax(0, 1fr) minmax(300px, 410px); gap: 28px; }
+.js .lv-detail { grid-column: 3; align-self: end; padding-bottom: 8px; }
+.js .lv { margin-top: 0; }
+.js .labels { display: block; position: fixed; inset: 0; z-index: 5; pointer-events: none; opacity: 0; transition: opacity .4s ease; }
+html[data-screen="levels"] .labels { opacity: 1; }
+.plabel { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 8px; padding: 6px 10px; font: 500 .88rem/1.2 var(--title); font-variation-settings: "wdth" 104; color: var(--ink-2); white-space: nowrap; pointer-events: auto; }
+.plabel i { width: 7px; height: 7px; background: var(--ink-3); transform: rotate(45deg); }
+.plabel:hover, .plabel.sel { color: var(--ink); }
+.plabel.sel i { background: var(--mari); }
+html:not([data-screen="levels"]) .plabel { pointer-events: none; }
+
+#exit .quit { margin: clamp(0px, 7vh, 72px) auto 0; }
+
+[data-motion="reduced"] *, [data-motion="reduced"] *::before, [data-motion="reduced"] *::after { transition-duration: 0s !important; transition-delay: 0s !important; animation: none !important; }
+
+.js .screen:focus { outline: none; }
+.scroll { display: contents; }
+.js #exit > .crumb { display: flex; width: min(600px, 100%); margin: clamp(0px, 7vh, 72px) auto 14px; }
+.js #exit .quit { margin: 0 auto; }
+.touch .bar { display: none; }
+.lv-step { display: none; }
+
+/* phones and short screens: each screen is a solid panel, and the scene stays visible beside it */
+@media (max-width: 820px), (max-height: 500px) {
+  :root { --panel: rgba(12, 16, 34, .5); }
+  .js .title { top: clamp(52px, 8svh, 76px); right: var(--pad); max-width: none; }
+  .title h1 { font-size: clamp(2.3rem, 11.5vw, 3.6rem); }
+  .tag { margin-top: 10px; font-size: 1.05rem; }
+  .status { font-size: .95rem; }
+  .js .menu { bottom: 18px; }
+  .js .menu a { padding: .4rem 0 .4rem 2rem; font-size: 1.42rem; }
+  .js .bar { display: none; }
+  .js .screen { inset: auto 0 0 0; height: 70svh; display: flex; flex-direction: column; overflow: hidden; padding: 0; background: var(--panel); border-top: 1px solid var(--line-2); transform: translateY(36px); }
+  /* the back button stays put above the scrolling part, so the panel can stay see-through */
+  .js .crumb, .js #exit > .crumb { display: flex; flex: none; width: auto; height: 54px; margin: 0; padding: 0 var(--pad); border-bottom: 1px solid var(--line); color: var(--ink); font: 500 1.08rem/1 var(--title); font-variation-settings: "wdth" 106; }
+  .js .scroll { display: block; flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 24px var(--pad) 40px; -webkit-mask-image: linear-gradient(transparent, #000 20px); mask-image: linear-gradient(transparent, #000 20px); }
+  .js .crumb svg { color: var(--mari); }
+  .screen-head h2 { font-size: 2.1rem; }
+  .js #exit .quit { margin: 0; }
+  .js .levels { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .js .levels > div:first-child { display: contents; }
+  .js .lv-detail { order: 1; grid-column: auto; align-self: auto; padding: 0 0 30px; scroll-margin-top: 16px; }
+  .js .lv-list { order: 2; max-width: none; }
+  .js .lv-step { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); font: 500 1.05rem/1 var(--title); font-variation-settings: "wdth" 106; color: var(--ink-2); }
+  .lv-step button { display: grid; place-items: center; width: 48px; height: 48px; color: var(--ink); }
+  .lv-step button:active { color: var(--mari); }
+  .lv-step svg { width: 10px; height: 13px; }
+  .ach li { grid-template-columns: 30px minmax(0, 1fr); }
+  .ach .yr { grid-column: 2; }
+  .branch { grid-template-columns: minmax(0, 1fr); }
+  .twigs { padding-left: 29px; }
+  .twigs { gap: 6px 18px; }
+  .twigs li::before { display: none; }
+  .prof { grid-template-columns: minmax(0, 1fr); }
+  .pic { width: 150px; }
+  .quests li { grid-template-columns: minmax(0, 1fr); }
+  .save { grid-template-columns: minmax(0, 1fr); padding: 0; border: 0; background: none; }
+  .save-art { display: none; }
+  .opt { grid-template-columns: minmax(0, 1fr); }
+  .o-val { grid-row: auto; grid-column: 1; margin-left: -12px; }
+  .o-val output, .pick .o-val output { min-width: 0; flex: 1; text-align: left; padding: 0 6px; }
+  .corner { top: 10px; gap: 6px; }
+  .corner .snd span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+/* phones held sideways: title and menu shrink to fit, and screens open as a panel on the left */
+@media (max-height: 500px) {
+  .js .title { top: 16px; right: auto; max-width: 62vw; }
+  .title h1 { font-size: clamp(1.8rem, 8vh, 2.4rem); }
+  .js .title .tag { display: none; }
+  .status { margin-top: 4px; }
+  .js .menu { bottom: 12px; }
+  .js .menu a { padding: .2rem 0 .2rem 2rem; font-size: 1.15rem; }
+  .js .screen { inset: 0 auto 0 0; width: min(500px, 60vw); height: auto; border-top: 0; border-right: 1px solid var(--line-2); transform: translateX(-28px); }
+}
+@media (max-height: 640px) and (min-width: 821px) {
+  .js .title .tag, .js .title .status { display: none; }
+}
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add("js"); document.documentElement.dataset.screen = "title"; if (matchMedia("(pointer: coarse)").matches) document.documentElement.classList.add("touch");</script>
+<canvas id="world" aria-hidden="true"></canvas>
+<div class="labels" id="labels" aria-hidden="true"></div>
+
+<div class="corner">
+  <button class="snd" id="snd" type="button" aria-pressed="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z"/><path class="waves" d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/><path class="x" d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+    <span>Sound on</span>
+  </button>
+  <a href="https://prasunshiwakoti.com.np/">Main site</a>
+</div>
+
+<button class="splash" id="splash" type="button">
+  <span class="splash-name" aria-hidden="true">Prasun Shiwakoti</span>
+  <span class="press" id="press">Press any key to start</span>
+  <span class="press-sub">Sound is on. Turn it off any time in the top corner.</span>
+</button>
+
+<header class="title" id="title">
+  <h1 id="name">Prasun Shiwakoti</h1>
+  <p class="tag">I build web applications and AI agents, from Kathmandu.</p>
+  <p class="status"><i aria-hidden="true"></i>Taking freelance projects</p>
+</header>
+
+<nav class="menu" id="menu" aria-label="Main menu">
+  <ul>
+    <li style="--i:0"><a href="#continue" data-hint="Pick up where I am right now: Buildor, the website builder I work on.">Continue</a></li>
+    <li style="--i:1"><a href="#new-game" data-hint="Tell me what you want built and start a project with me.">New game</a></li>
+    <li style="--i:2"><a href="#levels" data-hint="Seven projects I've built, each one a peak on the map.">Levels</a></li>
+    <li style="--i:3"><a href="#skills" data-hint="What I can build for you, and the tools I use.">Skills</a></li>
+    <li style="--i:4"><a href="#character" data-hint="Who I am, where I've worked, and what I've won.">Character</a></li>
+    <li style="--i:5"><a href="#settings" data-hint="Sound, time of day, motion and text size.">Settings</a></li>
+    <li style="--i:6"><a href="#exit" data-hint="How to reach me before you go.">Exit</a></li>
+  </ul>
+  <span class="marker" aria-hidden="true"></span>
+</nav>
+
+<main>
+  <section class="screen" id="continue" aria-labelledby="h-continue" data-keys="nav open back" data-hint="My current project. Visit it, or look through the rest of my work.">
+    <button class="crumb" type="button" data-back><svg viewBox="0 0 9 12" aria-hidden="true"><path d="M8 0v12L0 6z" fill="currentColor"/></svg>Main menu</button>
+    <div class="screen-head"><h2 id="h-continue">Continue</h2><p>Picking up where I am right now.</p></div>
+    <div class="save">
+      <div class="save-art" aria-hidden="true">
+        <svg viewBox="0 0 190 150" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="4" y="4" width="182" height="128" rx="3"/>
+          <path d="M4 24h182"/>
+          <circle cx="15" cy="14" r="3" fill="currentColor" stroke="none"/><circle cx="26" cy="14" r="3" fill="currentColor" stroke="none"/><circle cx="37" cy="14" r="3" fill="currentColor" stroke="none"/>
+          <rect x="16" y="34" width="158" height="16" fill="currentColor" stroke="none" opacity=".35"/>
+          <rect x="16" y="60" width="66" height="58" fill="currentColor" stroke="none" opacity=".2"/>
+          <path d="M94 64h70M94 76h56M94 88h64" stroke-width="5"/>
+          <rect x="104" y="104" width="50" height="20" fill="#f5a524" stroke="none" transform="rotate(-7 129 114)"/>
+          <path d="M150 112v26l6-6 5 11 5-2-5-11h9z" fill="#f3f5f8" stroke="#141a2c" stroke-width="1.5" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="save-info">
+        <span class="save-slot">Current project</span>
+        <h3>Buildor</h3>
+        <p class="say">A platform that lets anyone build their own website without writing code.</p>
+        <dl class="sheet">
+          <div><dt>Role</dt><dd>Full-stack developer at Laid&amp;Lazy Pvt. Ltd.</dd></div>
+          <div><dt>Since</dt><dd>September 2025</dd></div>
+          <div><dt>Players</dt><dd>100+ active users</dd></div>
+          <div><dt>Built with</dt><dd>Django, React, PostgreSQL</dd></div>
+        </dl>
+        <div class="acts"><a class="act primary row" href="https://buildor.io" target="_blank" rel="noopener">Visit buildor.io</a><button class="act row" type="button" data-go="levels">See all levels</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="new-game" aria-labelledby="h-new" data-keys="nav change back" data-hint="Choose with the arrow keys. Start opens your email app with everything filled in.">
+    <button class="crumb" type="button" data-back><svg viewBox="0 0 9 12" aria-hidden="true"><path d="M8 0v12L0 6z" fill="currentColor"/></svg>Main menu</button>
+    <div class="screen-head"><h2 id="h-new">New game</h2><p>Tell me what you want built. Start opens your email app with it all filled in, so nothing is stored on this site.</p></div>
+    <form id="ng">
+      <div class="opts">
+        <div class="opt pick mk row" tabindex="0" data-pick="what" role="group" aria-labelledby="p-what">
+          <span class="o-name" id="p-what">What should we build?</span>
+          <span class="o-help">Not sure is a fine answer.</span>
+          <span class="o-val"><button type="button" tabindex="-1" data-step="-1" aria-label="Previous choice"><svg viewBox="0 0 9 12"><path d="M9 0v12L0 6z" fill="currentColor"/></svg></button><output aria-live="polite">Web application</output><button type="button" tabindex="-1" data-step="1" aria-label="Next choice"><svg viewBox="0 0 9 12"><path d="M0 0v12l9-6z" fill="currentColor"/></svg></button></span>
+        </div>
+        <div class="opt pick mk row" tabindex="0" data-pick="when" role="group" aria-labelledby="p-when">
+          <span class="o-name" id="p-when">When do you need it?</span>
+          <span class="o-help">A rough idea is enough.</span>
+          <span class="o-val"><button type="button" tabindex="-1" data-step="-1" aria-label="Previous choice"><svg viewBox="0 0 9 12"><path d="M9 0v12L0 6z" fill="currentColor"/></svg></button><output aria-live="polite">In a month or two</output><button type="button" tabindex="-1" data-step="1" aria-label="Next choice"><svg viewBox="0 0 9 12"><path d="M0 0v12l9-6z" fill="currentColor"/></svg></button></span>
+        </div>
+        <div class="field"><label for="ng-name">Your name</label><input class="row" id="ng-name" autocomplete="name"></div>
+        <div class="field"><label for="ng-about">Tell me about it</label><textarea class="row" id="ng-about" placeholder="A booking app for my clinic, with an admin panel for my staff"></textarea></div>
+      </div>
+      <div class="ng-go"><button class="act primary row" type="submit">Start</button><p>Or write to <a href="mailto:prasunshiwakoti@gmail.com">prasunshiwakoti@gmail.com</a></p></div>
+    </form>
+  </section>
+
+  <section class="screen" id="levels" aria-labelledby="h-levels" data-keys="nav open back" data-hint="Pick a level to fly to its peak.">
+    <button class="crumb" type="button" data-back><svg viewBox="0 0 9 12" aria-hidden="true"><path d="M8 0v12L0 6z" fill="currentColor"/></svg>Main menu</button>
+    <div class="levels">
+      <div>
+        <div class="screen-head"><h2 id="h-levels">Levels</h2><p>Seven projects, newest first.</p></div>
+        <ul class="lv-list">
+          <li><button class="lvl mk row" type="button" aria-current="true"><b>Buildor</b><span>2025 to now</span></button></li>
+          <li><button class="lvl mk row" type="button"><b>Social-media autopilot</b><span>2025</span></button></li>
+          <li><button class="lvl mk row" type="button"><b>Research agent team</b><span>2025</span></button></li>
+          <li><button class="lvl mk row" type="button"><b>Market forecasting</b><span>2025</span></button></li>
+          <li><button class="lvl mk row" type="button"><b>Transformer from scratch</b><span>2024</span></button></li>
+          <li><button class="lvl mk row" type="button"><b>CoCo study assistant</b><span>2024</span></button></li>
+          <li><button class="lvl mk row" type="button"><b>Heart-risk API</b><span>2023</span></button></li>
+        </ul>
+      </div>
+      <div class="lv-detail">
+        <div class="lv-step"><button type="button" data-lv="-1" aria-label="Previous level"><svg viewBox="0 0 9 12" aria-hidden="true"><path d="M9 0v12L0 6z" fill="currentColor"/></svg></button><span id="lv-count" aria-live="polite">Level 1 of 7</span><button type="button" data-lv="1" aria-label="Next level"><svg viewBox="0 0 9 12" aria-hidden="true"><path d="M0 0v12l9-6z" fill="currentColor"/></svg></button></div>
+        <article class="lv"><span class="when">2025 to now</span><h3>Buildor</h3><p class="say">A platform that lets anyone build their own website without writing code.</p><p>I architected and shipped it at Laid&amp;Lazy Pvt. Ltd. More than 100 people now run their sites on it.</p><p class="stack">Built with Django, React and PostgreSQL</p><div class="acts"><a class="act row" href="https://buildor.io" target="_blank" rel="noopener">Visit buildor.io</a></div></article>
+        <article class="lv"><span class="when">2025</span><h3>AI Social-Media Automation</h3><p class="say">Writes your posts, sends them out on time, then reads every reply.</p><p>It plans on-brand posts with retrieval (RAG), schedules them, and scores how people feel in the replies, so one person can run several accounts.</p><p class="stack">Built with Django, React, RAG and LSTM</p><div class="acts"><a class="act row" href="https://github.com/Prasun-Shiwakoti/Social-Media-Manager-AI" target="_blank" rel="noopener">See the code</a></div></article>
+        <article class="lv"><span class="when">2025</span><h3>Multi-Agent Research System</h3><p class="say">Three AI agents research your competitors so you don't have to.</p><p>One gathers sources, one checks every claim, one writes the brief. You get a competitor report with its sources attached.</p><p class="stack">Built with Python and LLM agents</p><div class="acts"><a class="act row" href="https://github.com/Prasun-Shiwakoti/Multi-Agent-Competitive-Intelligence-Research-System" target="_blank" rel="noopener">See the code</a></div></article>
+        <article class="lv"><span class="when">2025</span><h3>News-Powered Market Analysis</h3><p class="say">Reads the day's financial news to forecast where stocks go next.</p><p>It combines the mood of the news with price history. This was my capstone for the Fusemachines AI Fellowship.</p><p class="stack">Built with LSTM, XGBoost and Pandas</p><div class="acts"><a class="act row" href="https://github.com/Prasun-Shiwakoti/News-Powered-Stock-Market-Analysis" target="_blank" rel="noopener">See the code</a></div></article>
+        <article class="lv"><span class="when">2024</span><h3>Transformer From Scratch</h3><p class="say">The model design behind ChatGPT, built by hand, layer by layer.</p><p>Attention, positional encoding and training written from first principles. Building one is the best way I know to really understand it.</p><p class="stack">Built with PyTorch</p><div class="acts"><a class="act row" href="https://github.com/Prasun-Shiwakoti/transformer-from-scratch" target="_blank" rel="noopener">See the code</a></div></article>
+        <article class="lv"><span class="when">2024</span><h3>CoCo, AI Study Assistant</h3><p class="say">A study helper that learns where each student gets stuck.</p><p>It changes how it explains things and which practice questions come next, so each student gets help that fits them.</p><p class="stack">Built with Django, React and machine learning</p><div class="acts"><a class="act row" href="https://github.com/Prasun-Shiwakoti/CoCo" target="_blank" rel="noopener">See the code</a></div></article>
+        <article class="lv"><span class="when">2023</span><h3>Heart-Disease Prediction API</h3><p class="say">Send it patient measurements, get back a heart-disease risk estimate.</p><p>A web service that lets any app or clinic system ask a trained model a question with one request.</p><p class="stack">Built with FastAPI and scikit-learn</p><div class="acts"><a class="act row" href="https://github.com/Prasun-Shiwakoti/heart-disease-api" target="_blank" rel="noopener">See the code</a></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="skills" aria-labelledby="h-skills" data-keys="nav back" data-hint="What I can build for you, and where I've done it before.">
+    <button class="crumb" type="button" data-back><svg viewBox="0 0 9 12" aria-hidden="true"><path d="M8 0v12L0 6z" fill="currentColor"/></svg>Main menu</button>
+    <div class="screen-head"><h2 id="h-skills">Skills</h2><p>What I can build for you. Each branch lists the tools I use and where I've done it before.</p></div>
+    <div class="tree">
+      <div class="branch sel">
+        <div class="br row" tabindex="0"><i aria-hidden="true"></i>Web applications</div>
+        <ul class="twigs" aria-label="Tools"><li><i></i>Django</li><li><i></i>React</li><li><i></i>PostgreSQL</li><li><i></i>Docker</li></ul>
+        <div class="br-detail"><p>Full products with sign-in, dashboards, payments and an admin panel you can run yourself.</p><p class="done">Done before: Buildor, used by 100+ people</p></div>
+      </div>
+      <div class="branch">
+        <div class="br row" tabindex="0"><i aria-hidden="true"></i>AI agents and automation</div>
+        <ul class="twigs" aria-label="Tools"><li><i></i>LLM agents</li><li><i></i>RAG</li><li><i></i>Python</li></ul>
+        <div class="br-detail"><p>Agents that research, write, sort or reply for you, connected to the tools you already use.</p><p class="done">Done before: a three-agent research team, social media on autopilot</p></div>
+      </div>
+      <div class="branch">
+        <div class="br row" tabindex="0"><i aria-hidden="true"></i>Machine learning features</div>
+        <ul class="twigs" aria-label="Tools"><li><i></i>PyTorch</li><li><i></i>LSTM</li><li><i></i>XGBoost</li><li><i></i>scikit-learn</li></ul>
+        <div class="br-detail"><p>Forecasts, recommendations and models that read text, built into the product you already have.</p><p class="done">Done before: news-based market forecasting, an adaptive study assistant</p></div>
+      </div>
+      <div class="branch">
+        <div class="br row" tabindex="0"><i aria-hidden="true"></i>APIs and backends</div>
+        <ul class="twigs" aria-label="Tools"><li><i></i>FastAPI</li><li><i></i>Django</li><li><i></i>REST</li><li><i></i>Docker</li></ul>
+        <div class="br-detail"><p>Connect your systems together, or take over a codebase that keeps falling over and make it stable.</p><p class="done">Done before: a heart-risk prediction API, the backend behind Buildor</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="screen" id="character" aria-labelledby="h-char" data-keys="tabs back" data-nav="tabs" data-hint="Switch tabs with the arrow keys.">
+    <button class="crumb" type="button" data-back><svg viewBox="0 0 9 12" aria-hidden="true"><path d="M8 0v12L0 6z" fill="currentColor"/></svg>Main menu</button>
+    <div class="screen-head"><h2 id="h-char">Character</h2></div>
+    <div class="tabs" role="tablist" aria-label="Character">
+      <button class="tab row" role="tab" id="tab-prof" aria-controls="t-prof" aria-selected="true">Profile</button>
+      <button class="tab row" role="tab" id="tab-story" aria-controls="t-story" aria-selected="false" tabindex="-1">Story so far</button>
+      <button class="tab row" role="tab" id="tab-ach" aria-controls="t-ach" aria-selected="false" tabindex="-1">Achievements</button>
+    </div>
+    <div class="tabpanel" id="t-prof" role="tabpanel" aria-labelledby="tab-prof">
+      <div class="prof">
+        <div class="pic"><img src="profile-440.webp" srcset="profile-440.webp 440w, profile-880.webp 880w" sizes="240px" width="440" height="550" alt="Prasun Shiwakoti"></div>
+        <div>
+          <h3>Prasun Shiwakoti</h3>
+          <dl class="sheet">
+            <div><dt>Class</dt><dd>Backend and machine learning engineer</dd></div>
+            <div><dt>Home</dt><dd>Kathmandu, Nepal</dd></div>
+            <div><dt>Status</dt><dd>Taking freelance projects</dd></div>
+            <div><dt>Replies</dt><dd>Within a day or two</dd></div>
+          </dl>
+          <p>Most of my work is backend: the part of a product nobody sees, and the part that decides whether the rest of it holds. I came to it through machine learning and stayed for the engineering. I'm a Computer Engineering student and a Fusemachines AI Fellow, and I work with clients anywhere.</p>
+        </div>
+      </div>
+    </div>
+    <div class="tabpanel" id="t-story" role="tabpanel" aria-labelledby="tab-story">
+      <ul class="quests">
+        <li><div><span class="q-state live">In progress</span><span class="q-when">Sept 2025 to now</span></div><div><b>Full-Stack Web Developer, Laid&amp;Lazy Pvt. Ltd.</b><p>Architected and shipped Buildor, a no-code website builder with 100+ active users.</p></div></li>
+        <li><div><span class="q-state live">In progress</span><span class="q-when">2023 to now</span></div><div><b>B.E. Computer Engineering, Kathmandu Engineering College</b><p>On a full scholarship (IOE rank 320). President of the KEC IT Club.</p></div></li>
+        <li><div><span class="q-state">Completed</span><span class="q-when">May to Dec 2025</span></div><div><b>AI Fellow, Fusemachines</b><p>A fully funded six-month AI programme. Shipped ML systems with Docker and automated deployment, and built data pipelines over 10,000+ records.</p></div></li>
+        <li><div><span class="q-state">Completed</span><span class="q-when">2020 to 2022</span></div><div><b>President, CS Club, Kathmandu Model College</b><p>Grew club sign-ups by 25% and ran bootcamps on cybersecurity, Python and web development.</p></div></li>
+      </ul>
+    </div>
+    <div class="tabpanel" id="t-ach" role="tabpanel" aria-labelledby="tab-ach">
+      <ul class="ach">
+        <li><i class="gem" aria-hidden="true"></i><div><b>Fellow</b><p>Finished the fully funded Fusemachines AI Fellowship and its Microdegree in AI.</p></div><span class="yr">2025</span></li>
+        <li><i class="gem" aria-hidden="true"></i><div><b>Certified</b><p>Machine Learning Specialization from Stanford University.</p></div><span class="yr">2024</span></li>
+        <li><i class="gem" aria-hidden="true"></i><div><b>Full ride</b><p>Full scholarship for Computer Engineering, IOE entrance rank 320.</p></div><span class="yr">2023</span></li>
+        <li><i class="gem" aria-hidden="true"></i><div><b>Club president, twice</b><p>Led the KEC IT Club and the Kathmandu Model College CS Club.</p></div><span class="yr">2020 to now</span></li>
+        <li><i class="gem" aria-hidden="true"></i><div><b>Hackathon winner</b><p>Won Provathon 2020, run by the CSIT Association of Nepal, with a health-monitoring app that predicts cardiac arrest from live data.</p></div><span class="yr">2020</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="screen" id="settings" aria-labelledby="h-settings" data-keys="nav change back" data-hint="Changes are saved on this device.">
+    <button class="crumb" type="button" data-back><svg viewBox="0 0 9 12" aria-hidden="true"><path d="M8 0v12L0 6z" fill="currentColor"/></svg>Main menu</button>
+    <div class="screen-head"><h2 id="h-settings">Settings</h2><p>These really work. Try the time of day.</p></div>
+    <div class="opts">
+      <div class="opt mk row" tabindex="0" data-opt="sfx" role="group" aria-labelledby="o-sfx"><span class="o-name" id="o-sfx">Sound effects</span><span class="o-help">Clicks and chimes as you move around.</span><span class="o-val"><button type="button" tabindex="-1" data-step="-1" aria-label="Previous value"><svg viewBox="0 0 9 12"><path d="M9 0v12L0 6z" fill="currentColor"/></svg></button><output aria-live="polite">On</output><button type="button" tabindex="-1" data-step="1" aria-label="Next value"><svg viewBox="0 0 9 12"><path d="M0 0v12l9-6z" fill="currentColor"/></svg></button></span></div>
+      <div class="opt mk row" tabindex="0" data-opt="music" role="group" aria-labelledby="o-music"><span class="o-name" id="o-music">Music</span><span class="o-help">Wind and slow chimes in the background.</span><span class="o-val"><button type="button" tabindex="-1" data-step="-1" aria-label="Previous value"><svg viewBox="0 0 9 12"><path d="M9 0v12L0 6z" fill="currentColor"/></svg></button><output aria-live="polite">On</output><button type="button" tabindex="-1" data-step="1" aria-label="Next value"><svg viewBox="0 0 9 12"><path d="M0 0v12l9-6z" fill="currentColor"/></svg></button></span></div>
+      <div class="opt mk row" tabindex="0" data-opt="time" role="group" aria-labelledby="o-time"><span class="o-name" id="o-time">Time of day</span><span class="o-help">Changes the light over the mountains.</span><span class="o-val"><button type="button" tabindex="-1" data-step="-1" aria-label="Previous value"><svg viewBox="0 0 9 12"><path d="M9 0v12L0 6z" fill="currentColor"/></svg></button><output aria-live="polite">Dawn</output><button type="button" tabindex="-1" data-step="1" aria-label="Next value"><svg viewBox="0 0 9 12"><path d="M0 0v12l9-6z" fill="currentColor"/></svg></button></span></div>
+      <div class="opt mk row" tabindex="0" data-opt="motion" role="group" aria-labelledby="o-motion"><span class="o-name" id="o-motion">Motion</span><span class="o-help">Reduced stops the camera flights, clouds and snow.</span><span class="o-val"><button type="button" tabindex="-1" data-step="-1" aria-label="Previous value"><svg viewBox="0 0 9 12"><path d="M9 0v12L0 6z" fill="currentColor"/></svg></button><output aria-live="polite">Full</output><button type="button" tabindex="-1" data-step="1" aria-label="Next value"><svg viewBox="0 0 9 12"><path d="M0 0v12l9-6z" fill="currentColor"/></svg></button></span></div>
+      <div class="opt mk row" tabindex="0" data-opt="text" role="group" aria-labelledby="o-text"><span class="o-name" id="o-text">Text size</span><span class="o-help">Makes every word on the site bigger.</span><span class="o-val"><button type="button" tabindex="-1" data-step="-1" aria-label="Previous value"><svg viewBox="0 0 9 12"><path d="M9 0v12L0 6z" fill="currentColor"/></svg></button><output aria-live="polite">Normal</output><button type="button" tabindex="-1" data-step="1" aria-label="Next value"><svg viewBox="0 0 9 12"><path d="M0 0v12l9-6z" fill="currentColor"/></svg></button></span></div>
+    </div>
+  </section>
+
+  <section class="screen" id="exit" aria-labelledby="h-exit" data-keys="nav open back" data-hint="Pick a way to reach me, or stay and keep looking.">
+    <div class="quit">
+      <button class="crumb" type="button" data-back><svg viewBox="0 0 9 12" aria-hidden="true"><path d="M8 0v12L0 6z" fill="currentColor"/></svg>Main menu</button>
+      <div class="screen-head"><h2 id="h-exit">Leaving already?</h2><p>Before you go, here's how to reach me. I reply within a day or two. Or leave for another version of this site.</p></div>
+      <ul>
+        <li><a class="q-row mk row" href="mailto:prasunshiwakoti@gmail.com">Email<span>prasunshiwakoti@gmail.com</span></a></li>
+        <li><a class="q-row mk row" href="tel:+9779861812959">Call<span>+977 9861812959</span></a></li>
+        <li><a class="q-row mk row" href="https://github.com/Prasun-Shiwakoti" target="_blank" rel="noopener">GitHub<span>Prasun-Shiwakoti</span></a></li>
+        <li><a class="q-row mk row" href="https://www.linkedin.com/in/prasun-shiwakoti-9570581b3/" target="_blank" rel="noopener">LinkedIn<span>Prasun Shiwakoti</span></a></li>
+        <li><a class="q-row mk row" href="https://prasunshiwakoti.com.np/">Main site<span>The usual website</span></a></li>
+        <li><a class="q-row mk row" href="https://formal-version.prasunshiwakoti.com.np/">Formal version<span>One plain page</span></a></li>
+        <li><button class="q-row mk row" type="button" data-back>Stay and keep looking</button></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer class="bar" id="bar">
+  <p class="hintline" id="hintline"></p>
+  <div class="keys" id="keys"></div>
+  <span class="build">Build 2026.10</span>
+</footer>
+<footer class="plain">© 2026 Prasun Shiwakoti, Kathmandu, Nepal</footer>
+
+<script type="module">
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js";
+
+const root = document.documentElement;
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const NARROW = () => innerWidth <= 820;
+// phones and short screens open each screen as a panel (same test as the CSS)
+const COMPACT = () => innerWidth <= 820 || innerHeight <= 500;
+const COARSE = matchMedia("(pointer: coarse)").matches;
+
+/* ---------- settings, kept on this device ---------- */
+const store = {
+  get(k, d) { try { return localStorage.getItem("start-" + k) ?? d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem("start-" + k, v); } catch {} },
+};
+const OPTS = { sfx: ["On", "Off"], music: ["On", "Off"], time: ["Dawn", "Day", "Night"], motion: ["Full", "Reduced"], text: ["Normal", "Large"] };
+const S = {
+  sfx: store.get("sfx", "On"), music: store.get("music", "On"), time: store.get("time", "Dawn"),
+  motion: store.get("motion", matchMedia("(prefers-reduced-motion: reduce)").matches ? "Reduced" : "Full"),
+  text: store.get("text", "Normal"),
+};
+for (const k in OPTS) if (!OPTS[k].includes(S[k])) S[k] = OPTS[k][0];
+const PICKS = {
+  what: ["Web application", "AI agent or automation", "Machine learning feature", "API or backend", "Not sure yet"],
+  when: ["In a month or two", "As soon as possible", "No rush"],
+};
+const pick = { what: 0, when: 0 };
+
+/* ---------- sound: made in the browser, no files ---------- */
+const Sound = (() => {
+  let ctx, out, sfx, music, chimeTimer;
+  const live = () => ctx && ctx.state === "running";
+  function init() {
+    if (ctx) { if (ctx.state === "suspended" && !document.hidden) ctx.resume(); return; }
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    ctx = new AC();
+    out = ctx.createGain(); out.gain.value = 0.8; out.connect(ctx.destination);
+    const delay = ctx.createDelay(1), fb = ctx.createGain(), damp = ctx.createBiquadFilter(), wet = ctx.createGain();
+    delay.delayTime.value = 0.33; fb.gain.value = 0.34; damp.type = "lowpass"; damp.frequency.value = 2200; wet.gain.value = 0.4;
+    delay.connect(damp); damp.connect(fb); fb.connect(delay); damp.connect(wet); wet.connect(out);
+    sfx = ctx.createGain(); sfx.connect(out); sfx.connect(delay);
+    music = ctx.createGain(); music.gain.value = 0; music.connect(out); music.connect(delay);
+    // wind: soft brown noise through a slowly wandering band-pass
+    const len = ctx.sampleRate * 4, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    let b = 0; for (let i = 0; i < len; i++) { b = (b + 0.02 * (Math.random() * 2 - 1)) / 1.02; d[i] = b * 3.2; }
+    const noise = ctx.createBufferSource(); noise.buffer = buf; noise.loop = true;
+    const band = ctx.createBiquadFilter(); band.type = "bandpass"; band.frequency.value = 420; band.Q.value = 0.7;
+    const lfo = ctx.createOscillator(), lfoAmt = ctx.createGain(); lfo.frequency.value = 0.06; lfoAmt.gain.value = 240; lfo.connect(lfoAmt); lfoAmt.connect(band.frequency);
+    const windG = ctx.createGain(); windG.gain.value = 0.55;
+    noise.connect(band); band.connect(windG); windG.connect(music); noise.start(); lfo.start();
+    // a low drone under it
+    const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 480; const padG = ctx.createGain(); padG.gain.value = 0.05;
+    [110, 164.81, 220.4].forEach((f) => { const o = ctx.createOscillator(); o.type = "triangle"; o.frequency.value = f; o.connect(lp); o.start(); });
+    lp.connect(padG); padG.connect(music);
+    apply();
+  }
+  function note(f, t0, dur, vol, type = "sine", bus = sfx) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.value = f;
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(vol, t0 + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g); g.connect(bus); o.start(t0); o.stop(t0 + dur + 0.05);
+  }
+  function play(kind) {
+    if (!live() || S.sfx !== "On") return;
+    const t = ctx.currentTime;
+    if (kind === "move") { note(1046.5, t, 0.08, 0.045); note(2093, t, 0.04, 0.01); }
+    else if (kind === "open") { note(659.3, t, 0.32, 0.06); note(987.8, t + 0.07, 0.45, 0.055); }
+    else if (kind === "back") { note(987.8, t, 0.2, 0.045); note(587.3, t + 0.07, 0.32, 0.045); }
+    else if (kind === "tick") note(1318.5, t, 0.07, 0.04, "triangle");
+    else if (kind === "start") [440, 659.3, 880, 1318.5].forEach((f, i) => note(f, t + i * 0.1, 1.6, 0.05));
+  }
+  function chime() {
+    clearTimeout(chimeTimer);
+    if (!ctx || S.music !== "On") return;
+    if (live()) { const scale = [880, 1046.5, 1174.7, 1318.5, 1568]; note(scale[(Math.random() * 5) | 0], ctx.currentTime, 3.2, 0.022, "sine", music); }
+    chimeTimer = setTimeout(chime, 2600 + Math.random() * 4200);
+  }
+  function apply() {
+    if (!ctx) return;
+    const t = ctx.currentTime;
+    sfx.gain.setTargetAtTime(S.sfx === "On" ? 1 : 0, t, 0.05);
+    music.gain.setTargetAtTime(S.music === "On" ? 0.9 : 0, t, S.music === "On" ? 1.2 : 0.2);
+    chime();
+  }
+  document.addEventListener("visibilitychange", () => { if (!ctx) return; document.hidden ? ctx.suspend() : ctx.resume(); });
+  return { init, play, apply };
+})();
+
+/* ---------- the world: mountains at first light ---------- */
+const PEAKS = [ // one peak per level, same order as the list
+  { x: 8, z: -132, h: 66, r: 50, view: -15 }, // view: the side a phone sees it from, in degrees from straight on
+  { x: -58, z: -100, h: 40, r: 32, view: 10 },
+  { x: 62, z: -96, h: 42, r: 32, view: -20 },
+  { x: -112, z: -156, h: 52, r: 44, view: 10 },
+  { x: 118, z: -166, h: 54, r: 44, view: 0 },
+  { x: -26, z: -64, h: 22, r: 24, view: 0 },
+  { x: 32, z: -58, h: 20, r: 22, view: 0 },
+];
+const TIMES = {
+  Dawn: { zenith: "#1d2a52", horizon: "#e8a06c", ground: "#3a3242", sun: [0.9, 0.17, 0.26], sunCol: "#ffc890", sunInt: 3.4, sky: "#8a93c2", gnd: "#2f2530", hemi: 1.5, fog: "#c48c74", cLit: "#ffcfa6", cShade: "#6a6489", city: 0.45, stars: 0.3, base: 0 },
+  Day: { zenith: "#2c62b4", horizon: "#bcd4ea", ground: "#55606e", sun: [0.45, 0.75, 0.4], sunCol: "#fff4e2", sunInt: 3.0, sky: "#b8d0ee", gnd: "#4a4d3e", hemi: 1.4, fog: "#b3c8df", cLit: "#ffffff", cShade: "#9cadc6", city: 0, stars: 0, base: 0.16 },
+  Night: { zenith: "#03060f", horizon: "#1a2442", ground: "#090c14", sun: [-0.55, 0.42, 0.35], sunCol: "#a9bce8", sunInt: 0.8, sky: "#2b3760", gnd: "#06080d", hemi: 0.55, fog: "#151d36", cLit: "#3d4a6c", cShade: "#141a2c", city: 1, stars: 1, base: 0 },
+};
+
+function hash(x, y) { let h = (Math.imul(x, 374761393) + Math.imul(y, 668265263)) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
+function vnoise(x, y) {
+  const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+  const a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+function fbm(x, y, oct = 5) { let s = 0, a = 0.5; for (let i = 0; i < oct; i++) { s += a * vnoise(x, y); [x, y] = [(0.8 * x - 0.6 * y) * 2.03 + 17.1, (0.6 * x + 0.8 * y) * 2.03 + 3.7]; a *= 0.5; } return s; }
+function ridged(x, y, oct = 6) { let s = 0, a = 0.5, w = 1; for (let i = 0; i < oct; i++) { let n = 1 - Math.abs(vnoise(x, y) * 2 - 1); n *= n * w; s += n * a; w = Math.min(1, n * 2); [x, y] = [(0.8 * x - 0.6 * y) * 2.1 + 5.3, (0.6 * x + 0.8 * y) * 2.1 + 9.1]; a *= 0.5; } return s; }
+const sstep = (e0, e1, x) => { const t = Math.min(1, Math.max(0, (x - e0) / (e1 - e0))); return t * t * (3 - 2 * t); };
+function height(x, z) {
+  // warp the ground so ridges wander instead of lining up
+  const wx = x + (fbm(x * 0.006, z * 0.006, 3) - 0.5) * 70, wz = z + (fbm(x * 0.006 + 9, z * 0.006 + 4, 3) - 0.5) * 70;
+  const north = sstep(-20, -130, z);
+  const r = ridged(wx * 0.0095 + 2, wz * 0.0095 + 7, 6);
+  let h = fbm(x * 0.02 + 11, z * 0.02 - 4) * 10 - 4 + r * 66 * north;
+  for (const p of PEAKS) { const d = Math.hypot(x - p.x, z - p.z) / p.r; if (d < 1) h += p.h * Math.pow(1 - d, 1.35) * (0.45 + 0.75 * r); }
+  return h;
+}
+// the true summit near each peak's centre, so its beacon sits on top
+function summit(p) {
+  let best = [p.x, p.z, -1e9];
+  for (let i = -6; i <= 6; i++) for (let j = -6; j <= 6; j++) {
+    const x = p.x + (i / 6) * p.r * 0.32, z = p.z + (j / 6) * p.r * 0.32, y = height(x, z);
+    if (y > best[2]) best = [x, z, y];
+  }
+  return new THREE.Vector3(best[0], best[2], best[1]);
+}
+
+const COLOR_OUT = /* glsl */`
+  #include <tonemapping_fragment>
+  #include <colorspace_fragment>`;
+const NOISE = /* glsl */`
+  float hh(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float vn(vec2 p) { vec2 i = floor(p), f = fract(p), u = f * f * (3. - 2. * f);
+    return mix(mix(hh(i), hh(i + vec2(1, 0)), u.x), mix(hh(i + vec2(0, 1)), hh(i + vec2(1, 1)), u.x), u.y); }
+  float fb(vec2 p) { float s = 0., a = .5; for (int i = 0; i < 5; i++) { s += a * vn(p); p = mat2(1.6, 1.2, -1.2, 1.6) * p; a *= .5; } return s; }`;
+
+function makeWorld() {
+  const canvas = $("#world");
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: "high-performance" }); }
+  catch { root.classList.add("no-gl"); return null; }
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.75));
+  renderer.toneMapping = THREE.NoToneMapping;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(46, 1, 0.5, 6000);
+  scene.fog = new THREE.Fog(0xffffff, 150, 600);
+
+  /* terrain */
+  const geo = new THREE.PlaneGeometry(560, 400, 280, 200);
+  geo.rotateX(-Math.PI / 2); geo.translate(0, 0, -80);
+  const P = geo.attributes.position;
+  for (let i = 0; i < P.count; i++) P.setY(i, height(P.getX(i), P.getZ(i)));
+  geo.computeVertexNormals();
+  const N = geo.attributes.normal, col = new Float32Array(P.count * 3);
+  const rock = new THREE.Color("#4b4e58"), rock2 = new THREE.Color("#6c6862"), forest = new THREE.Color("#26311f"), snow = new THREE.Color("#eef1f6"), c = new THREE.Color();
+  for (let i = 0; i < P.count; i++) {
+    const x = P.getX(i), y = P.getY(i), z = P.getZ(i), ny = N.getY(i);
+    const line = 36 + (fbm(x * 0.04, z * 0.04, 3) - 0.5) * 20;
+    const sn = sstep(line - 6, line + 6, y) * sstep(0.34, 0.62, ny);
+    c.copy(rock).lerp(rock2, fbm(x * 0.07, z * 0.07, 2)).lerp(forest, sstep(9, 0, y) * 0.9).lerp(snow, sn);
+    col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
+  }
+  geo.setAttribute("color", new THREE.BufferAttribute(col, 3));
+  scene.add(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.95, metalness: 0 })));
+
+  const sun = new THREE.DirectionalLight(0xffffff, 3); scene.add(sun, sun.target);
+  const hemi = new THREE.HemisphereLight(0xffffff, 0x000000, 1); scene.add(hemi);
+
+  /* sky */
+  const skyU = { uZenith: { value: new THREE.Color() }, uHorizon: { value: new THREE.Color() }, uGround: { value: new THREE.Color() }, uSunDir: { value: new THREE.Vector3(0, 1, 0) }, uSunCol: { value: new THREE.Color() }, uStars: { value: 0 }, uTime: { value: 0 } };
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(4000, 48, 24), new THREE.ShaderMaterial({
+    uniforms: skyU, side: THREE.BackSide, depthWrite: false, fog: false,
+    vertexShader: `varying vec3 vDir; void main() { vDir = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); }`,
+    fragmentShader: `uniform vec3 uZenith, uHorizon, uGround, uSunDir, uSunCol; uniform float uStars, uTime; varying vec3 vDir;
+      float h21(vec2 p) { p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+      void main() {
+        vec3 d = normalize(vDir); float y = d.y;
+        vec3 col = mix(uHorizon, uZenith, pow(clamp(y, 0., 1.), .5));
+        col = mix(col, uGround, smoothstep(0., -.2, y));
+        float s = max(dot(d, normalize(uSunDir)), 0.);
+        col += uSunCol * (pow(s, 5.) * .32 + pow(s, 80.) * .5);
+        col = mix(col, uSunCol * 1.15, smoothstep(.99935, .99955, s));
+        if (uStars > 0. && y > 0.) {
+          vec2 g = vec2(atan(d.z, d.x) * 160., y * 260.); vec2 id = floor(g); float r = h21(id);
+          float st = step(.993, r) * smoothstep(.45, 0., length(fract(g) - .5)) * (.6 + .4 * sin(uTime * 1.7 + r * 50.));
+          col += vec3(st) * uStars * smoothstep(0., .12, y);
+        }
+        gl_FragColor = vec4(col, 1.);${COLOR_OUT}
+      }`,
+  }));
+  sky.renderOrder = -2; scene.add(sky);
+
+  /* a sea of cloud in the valleys */
+  const cloudU = { uTime: { value: 0 }, uLit: { value: new THREE.Color() }, uShade: { value: new THREE.Color() }, uFog: { value: new THREE.Color() }, uDensity: { value: 1 } };
+  const clouds = new THREE.Mesh(new THREE.PlaneGeometry(1400, 1000).rotateX(-Math.PI / 2), new THREE.ShaderMaterial({
+    uniforms: cloudU, transparent: true, depthWrite: false, fog: false,
+    vertexShader: `varying vec3 vW; void main() { vec4 w = modelMatrix * vec4(position, 1.); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
+    fragmentShader: `uniform float uTime, uDensity; uniform vec3 uLit, uShade, uFog; varying vec3 vW; ${NOISE}
+      void main() {
+        vec2 p = vW.xz * .011 + vec2(uTime * .012, uTime * .004);
+        float n = fb(p), n2 = fb(p * 2.6 + 4.);
+        float a = smoothstep(.5 - uDensity * .14, .86, n * .78 + n2 * .32);
+        float dist = distance(cameraPosition, vW);
+        a *= smoothstep(10., 60., dist) * (1. - smoothstep(700., 1100., dist));
+        vec3 col = mix(uShade, uLit, smoothstep(.35, .9, n2));
+        col = mix(col, uFog, smoothstep(150., 620., dist) * .85);
+        gl_FragColor = vec4(col, a * .92);${COLOR_OUT}
+      }`,
+  }));
+  clouds.position.set(0, 13, -60); clouds.renderOrder = 1; scene.add(clouds);
+
+  /* lights of the valley towns, for dusk and night */
+  const cityPos = [];
+  for (let k = 0; cityPos.length < 2400 && k < 40000; k++) {
+    const x = (Math.random() - 0.5) * 300, z = -40 + Math.random() * 150, y = height(x, z);
+    const cluster = fbm(x * 0.03 + 40, z * 0.03, 3);
+    if (y < 4 && cluster > 0.5) cityPos.push(x, y + 0.5, z);
+  }
+  const cityGeo = new THREE.BufferGeometry(); cityGeo.setAttribute("position", new THREE.Float32BufferAttribute(cityPos, 3));
+  const cityU = { uAmt: { value: 0 }, uTime: { value: 0 }, uDpr: { value: renderer.getPixelRatio() } };
+  scene.add(new THREE.Points(cityGeo, new THREE.ShaderMaterial({
+    uniforms: cityU, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
+    vertexShader: `uniform float uDpr, uTime; varying float vT; void main() { vec4 mv = modelViewMatrix * vec4(position, 1.); gl_Position = projectionMatrix * mv;
+      vT = .7 + .3 * sin(uTime * 2. + position.x * 3.1 + position.z * 1.7); gl_PointSize = clamp(520. / -mv.z, 1.6, 7.) * uDpr; }`,
+    fragmentShader: `uniform float uAmt; varying float vT; void main() { float d = length(gl_PointCoord - .5); float a = smoothstep(.5, 0., d) * uAmt * vT; gl_FragColor = vec4(vec3(1., .72, .38) * a, a); }`,
+  })));
+
+  /* drifting snow near the camera */
+  const snowPos = new Float32Array(900 * 3), snowR = new Float32Array(900);
+  for (let i = 0; i < 900; i++) { snowPos[i * 3] = Math.random() * 140; snowPos[i * 3 + 1] = Math.random() * 70; snowPos[i * 3 + 2] = Math.random() * 140; snowR[i] = Math.random(); }
+  const snowGeo = new THREE.BufferGeometry(); snowGeo.setAttribute("position", new THREE.BufferAttribute(snowPos, 3)); snowGeo.setAttribute("aR", new THREE.BufferAttribute(snowR, 1));
+  const snowU = { uTime: { value: 0 }, uCam: { value: new THREE.Vector3() }, uDpr: { value: renderer.getPixelRatio() }, uAmt: { value: 1 } };
+  const snowPts = new THREE.Points(snowGeo, new THREE.ShaderMaterial({
+    uniforms: snowU, transparent: true, depthWrite: false,
+    vertexShader: `uniform float uTime, uDpr; uniform vec3 uCam; attribute float aR; varying float vA;
+      void main() { vec3 box = vec3(140., 70., 140.);
+        vec3 p = position + vec3(uTime * (3. + aR * 2.), -uTime * (1. + aR), uTime * .8) + vec3(sin(uTime * .7 + aR * 9.) * 2., 0., 0.);
+        p = mod(p - uCam + box * .5, box) - box * .5 + uCam;
+        vec4 mv = viewMatrix * vec4(p, 1.); gl_Position = projectionMatrix * mv;
+        gl_PointSize = clamp((1. + aR * 1.6) * 90. / -mv.z, 0., 5.) * uDpr; vA = smoothstep(2., 10., -mv.z); }`,
+    fragmentShader: `uniform float uAmt; varying float vA; void main() { float d = length(gl_PointCoord - .5); float a = smoothstep(.5, .1, d) * .55 * vA * uAmt; gl_FragColor = vec4(vec3(1.), a); }`,
+  }));
+  snowPts.frustumCulled = false; scene.add(snowPts);
+
+  /* a beacon on every project's summit */
+  const MARI = new THREE.Color("#f5a524");
+  const beamGeo = new THREE.CylinderGeometry(1, 1, 1, 16, 1, true).translate(0, 0.5, 0);
+  const glowTex = (() => {
+    const c = document.createElement("canvas"); c.width = c.height = 64;
+    const x = c.getContext("2d"), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+    g.addColorStop(0, "rgba(255,255,255,1)"); g.addColorStop(0.25, "rgba(255,255,255,.45)"); g.addColorStop(1, "rgba(255,255,255,0)");
+    x.fillStyle = g; x.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c);
+  })();
+  const beacons = PEAKS.map((p) => {
+    const top = summit(p);
+    const g = new THREE.Group(); g.position.copy(top);
+    const beam = new THREE.Mesh(beamGeo, new THREE.ShaderMaterial({
+      uniforms: { uA: { value: 0 }, uCol: { value: MARI } }, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false,
+      vertexShader: `varying float vY, vF; void main() { vY = uv.y; vec4 mv = modelViewMatrix * vec4(position, 1.);
+        vF = abs(dot(normalize(normalMatrix * normal), normalize(-mv.xyz))); gl_Position = projectionMatrix * mv; }`,
+      // brightest down the middle and at the foot, fading up into the sky; a strong beam burns toward white
+      fragmentShader: `uniform float uA; uniform vec3 uCol; varying float vY, vF; void main() { float fall = pow(1. - vY, 1.7) * uA;
+        vec3 c = uCol * pow(vF, 3.) * fall * .8 + vec3(1., .86, .6) * pow(vF, 14.) * fall * .55; gl_FragColor = vec4(c, 1.);${COLOR_OUT} }`,
+    }));
+    beam.scale.set(0.5, 70, 0.5);
+    const gem = new THREE.Mesh(new THREE.OctahedronGeometry(1), new THREE.MeshBasicMaterial({ color: MARI, transparent: true, opacity: 0, fog: false }));
+    gem.position.y = 5;
+    const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: MARI, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, fog: false }));
+    g.add(beam, gem, glow); scene.add(g);
+    return { top, g, beam, gem, glow, a: 0, want: 0, k: 0, hi: false };
+  });
+
+  /* darkening behind the text, drawn last over everything */
+  const scrimU = { uLeft: { value: 0.5 }, uRight: { value: 0 }, uTop: { value: 0 }, uBottom: { value: 0 }, uDim: { value: 0 }, uBase: { value: 0 } };
+  const scrim = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({
+    uniforms: scrimU, transparent: true, depthTest: false, depthWrite: false, fog: false,
+    vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }`,
+    fragmentShader: `uniform float uLeft, uRight, uTop, uBottom, uDim, uBase; varying vec2 vUv;
+      void main() { vec2 uv = vUv;
+        float a = smoothstep(.5, 1.2, length((uv - .5) * vec2(1.5, 1.25))) * .55 + uBase;
+        a += (1. - smoothstep(0., .62, uv.x)) * uLeft;
+        a += smoothstep(.5, 1., uv.x) * uRight;
+        a += smoothstep(.5, 1., uv.y) * uTop;
+        a += (1. - smoothstep(0., .64, uv.y)) * uBottom;
+        a = 1. - (1. - clamp(a, 0., 1.)) * (1. - uDim);
+        gl_FragColor = vec4(.02, .03, .06, clamp(a, 0., .9)); }`,
+  }));
+  scrim.frustumCulled = false; scrim.renderOrder = 999; scene.add(scrim);
+
+  /* camera shots */
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  let frameK = 0, frameTo = 0, region = [0, 0, innerWidth, innerHeight];
+  function peakShot(i, side = 0) {
+    const t = beacons[i].top;
+    return { pos: V(t.x + 26, t.y * 0.58 + 14, t.z + 104), look: V(t.x - side, t.y * 0.8, t.z) };
+  }
+  // on a phone the panel leaves only a strip of sky, so stand close in front of the peak:
+  // its slopes fill the strip down to the cloud and the summit sits just above the middle
+  function closeShot(i) {
+    const t = beacons[i].top, a = PEAKS[i].view * Math.PI / 180;
+    const tv = Math.tan((46 + 18 * sstep(1.15, 0.85, region[2] / region[3])) * Math.PI / 360);
+    const d = Math.max(46, (t.y - 12) / (1.25 * tv)), ly = t.y - 0.25 * d * tv;
+    const x = t.x + Math.sin(a) * d, z = t.z + Math.cos(a) * d;
+    let y = Math.max(22, ly + d * 0.1);
+    // climb until nothing in between hides the summit
+    for (let k = 1; k < 38; k++) { const f = k / 40; y = Math.max(y, (height(x + (t.x - x) * f, z + (t.z - z) * f) + (f < 0.8 ? 2.5 : 0.5) - (t.y + 1) * f) / (1 - f)); }
+    return { pos: V(x, y, z), look: V(t.x, ly, t.z) };
+  }
+  function shotFor(screen, level) {
+    const n = NARROW(), close = frameTo === 1;
+    switch (screen) {
+      case "splash": return { pos: V(0, 40, 150), look: V(0, 48, -140) };
+      case "continue": return close ? closeShot(0) : peakShot(0, 42);
+      case "levels": return close ? closeShot(level) : peakShot(level);
+      case "new-game": return { pos: V(76, 30, 34), look: V(-40, 40, -150) };
+      case "skills": return { pos: V(-124, 44, -14), look: V(60, 40, -150) };
+      case "character": { const s = TIMES[S.time].sun; return { pos: V(30, 30, 30), look: V(30 + s[0] * 240, 34, 30 + s[2] * 240) }; }
+      case "settings": return { pos: V(0, 140, 120), look: V(0, 10, -110) };
+      case "exit": return { pos: V(0, 54, 210), look: V(0, 40, -100) };
+      default: return n ? { pos: V(4, 24, 96), look: V(8, 50, -130) } : { pos: V(-8, 24, 76), look: V(-40, 40, -130) };
+    }
+  }
+  const SCRIM = { // left, right, top, bottom, dim
+    title: [0.62, 0, 0, 0.25, 0], continue: [0.7, 0, 0, 0.2, 0.08], levels: [0.62, 0.62, 0, 0.2, 0.04],
+    "new-game": [0.7, 0, 0, 0.2, 0.3], skills: [0.6, 0, 0, 0.2, 0.36], character: [0.62, 0.3, 0, 0.2, 0.3],
+    settings: [0.7, 0, 0, 0.2, 0.08], exit: [0.2, 0.2, 0, 0.2, 0.5], splash: [0, 0, 0, 0.3, 0.12],
+  };
+  const SCRIM_NARROW = { title: [0, 0, 0.55, 0.8, 0], splash: [0, 0, 0, 0.3, 0.12] };
+  // behind the see-through panel: darker toward the panel, and a little at the top for the corner buttons
+  const SCRIM_PANEL = { tall: [0, 0, 0.4, 0.75, 0.08], wide: [0.7, 0, 0.3, 0.2, 0.08] };
+
+  let screen = "splash", level = 0, reduced = S.motion === "Reduced";
+  let shot = shotFor(screen, level);
+  const cam = { pos: shot.pos.clone(), look: shot.look.clone(), vp: V(0, 0, 0), vl: V(0, 0, 0) };
+  const scrimNow = [...SCRIM.splash];
+  const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
+  addEventListener("pointermove", (e) => { pointer.x = e.clientX / innerWidth - 0.5; pointer.y = e.clientY / innerHeight - 0.5; }, { passive: true });
+
+  /* time of day: every colour eases to the new preset */
+  const cur = {}, tgt = {};
+  const COLS = ["zenith", "horizon", "ground", "sunCol", "sky", "gnd", "fog", "cLit", "cShade"], NUMS = ["sunInt", "hemi", "city", "stars", "base"];
+  function loadTime(name, snap) {
+    const T = TIMES[name];
+    COLS.forEach((k) => { tgt[k] = new THREE.Color(T[k]); if (snap || !cur[k]) cur[k] = tgt[k].clone(); });
+    NUMS.forEach((k) => { tgt[k] = T[k]; if (snap || cur[k] == null) cur[k] = T[k]; });
+    tgt.sun = V(...T.sun).normalize(); if (snap || !cur.sun) cur.sun = tgt.sun.clone();
+  }
+  loadTime(S.time, true);
+
+  /* summit labels for the level screen */
+  const labelBox = $("#labels");
+  const labels = $$(".lvl b").map((b, i) => {
+    const el = document.createElement("button"); el.type = "button"; el.className = "plabel"; el.tabIndex = -1;
+    el.innerHTML = `<i></i>${b.textContent}`; el.addEventListener("click", () => $$(".lvl")[i].focus());
+    labelBox.appendChild(el); return el;
+  });
+  let band = [0, innerWidth];
+  function measureBand() {
+    const l = $(".lv-list"), d = $(".lv-detail");
+    if (!l || COMPACT()) { band = [0, 0]; return; }
+    band = [l.getBoundingClientRect().right + 24, d.getBoundingClientRect().left - 24];
+  }
+
+  // when a panel covers part of the screen, the shot is framed in the part that is still visible
+  function measureFrame() {
+    const el = COMPACT() && screen !== "title" && screen !== "splash" ? document.getElementById(screen) : null;
+    if (!el) { frameTo = 0; return; }
+    const top = el.offsetTop, right = el.offsetLeft + el.offsetWidth;
+    region = top > 40 ? [0, 0, innerWidth, top] : [right, 0, innerWidth - right, innerHeight];
+    frameTo = 1;
+  }
+
+  function resize() {
+    renderer.setSize(innerWidth, innerHeight, false);
+    measureFrame(); shot = shotFor(screen, level); measureBand();
+  }
+  addEventListener("resize", resize); resize();
+
+  const proj = new THREE.Vector3();
+  let last = performance.now(), time = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (!reduced) time += dt;
+    const ease = 1 - Math.exp(-dt * 2.2);
+
+    // colours of the hour
+    COLS.forEach((k) => cur[k].lerp(tgt[k], ease)); NUMS.forEach((k) => (cur[k] += (tgt[k] - cur[k]) * ease)); cur.sun.lerp(tgt.sun, ease).normalize();
+    skyU.uZenith.value.copy(cur.zenith); skyU.uHorizon.value.copy(cur.horizon); skyU.uGround.value.copy(cur.ground);
+    skyU.uSunDir.value.copy(cur.sun); skyU.uSunCol.value.copy(cur.sunCol); skyU.uStars.value = cur.stars; skyU.uTime.value = time;
+    scene.fog.color.copy(cur.fog); sun.color.copy(cur.sunCol); sun.intensity = cur.sunInt; sun.position.copy(cur.sun).multiplyScalar(300);
+    hemi.color.copy(cur.sky); hemi.groundColor.copy(cur.gnd); hemi.intensity = cur.hemi;
+    cloudU.uTime.value = time; cloudU.uLit.value.copy(cur.cLit); cloudU.uShade.value.copy(cur.cShade); cloudU.uFog.value.copy(cur.fog); cloudU.uDensity.value = 1 - cur.city * 0.5;
+    cityU.uAmt.value = cur.city; cityU.uTime.value = time;
+
+    // camera: a damped spring toward the current shot
+    const w = 1.9;
+    if (reduced) { cam.pos.copy(shot.pos); cam.look.copy(shot.look); cam.vp.set(0, 0, 0); cam.vl.set(0, 0, 0); }
+    else for (const [x, v, t] of [[cam.pos, cam.vp, shot.pos], [cam.look, cam.vl, shot.look]]) {
+      v.addScaledVector(proj.copy(t).sub(x), w * w * dt).multiplyScalar(Math.exp(-2 * w * dt)); x.addScaledVector(v, dt);
+    }
+    frameK += (frameTo - frameK) * (reduced ? 1 : ease);
+    const W = innerWidth, H = innerHeight, fw = W + (region[2] - W) * frameK, fh = H + (region[3] - H) * frameK;
+    camera.aspect = fw / fh; camera.fov = 46 + 18 * sstep(1.15, 0.85, fw / fh);
+    camera.setViewOffset(fw, fh, -region[0] * frameK, -region[1] * frameK, W, H);
+    pointer.sx += (pointer.x - pointer.sx) * ease; pointer.sy += (pointer.y - pointer.sy) * ease;
+    const drift = reduced ? 0 : Math.min(1, cam.pos.distanceTo(cam.look) / 170);
+    camera.position.copy(cam.pos);
+    camera.position.x += (Math.sin(time * 0.05) * 7 + pointer.sx * 6) * drift;
+    camera.position.y += (Math.sin(time * 0.07) * 1.4 - pointer.sy * 3) * drift;
+    // close phone shots sit low, so pull back and up over the range between peaks (nothing at rest)
+    const hop = frameTo === 1 ? Math.min(45, cam.vp.length() * 0.4) : 0;
+    if (hop) { proj.subVectors(cam.pos, cam.look).setY(0).normalize(); camera.position.addScaledVector(proj, hop * 1.4); camera.position.y += hop; }
+    camera.lookAt(proj.copy(cam.look).setY(cam.look.y + hop * 0.3));
+    sky.position.copy(camera.position);
+    snowU.uTime.value = time; snowU.uCam.value.copy(camera.position); snowU.uAmt.value = reduced ? 0 : 1 - cur.base * 2;
+
+    // beacons
+    const quick = 1 - Math.exp(-dt * 7), close = frameTo === 1;
+    beacons.forEach((b, i) => {
+      b.a += (b.want - b.a) * quick; b.k += ((b.hi ? 1 : 0) - b.k) * quick;
+      const d = camera.position.distanceTo(b.top), s = Math.max(0.35, d * 0.004), w = s + d * (close ? 0.006 : 0.0036) * b.k, sg = s * (1 + 0.4 * b.k);
+      b.beam.material.uniforms.uA.value = b.a * (0.8 + 1.1 * b.k); b.beam.scale.set(w, 70 + 30 * b.k, w);
+      b.gem.material.opacity = Math.min(1, b.a * 1.4); b.gem.scale.set(sg * 3, sg * 4.6, sg * 3); b.gem.position.y = 3 + sg * 4;
+      b.gem.rotation.y = time * 0.8;
+      b.glow.material.opacity = b.a * b.k * 0.75; b.glow.position.y = b.gem.position.y; b.glow.scale.setScalar(d * 0.11 * b.k + 0.01);
+      b.g.visible = b.a > 0.01;
+      const el = labels[i];
+      if (screen === "levels" && !COMPACT()) {
+        proj.copy(b.top); proj.y += sg * 9 + d * 0.035 * b.k; proj.project(camera);
+        const x = (proj.x * 0.5 + 0.5) * innerWidth, y = (-proj.y * 0.5 + 0.5) * innerHeight;
+        const show = proj.z < 1 && x > band[0] && x < band[1] && y > 60 && y < innerHeight - 80;
+        el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) translate(-50%, -100%)`;
+        el.style.visibility = show ? "visible" : "hidden";
+        el.classList.toggle("sel", i === level);
+      } else el.style.visibility = "hidden";
+    });
+
+    // scrim
+    const want = COMPACT() && screen !== "title" && screen !== "splash" ? SCRIM_PANEL[NARROW() ? "tall" : "wide"] : (NARROW() && SCRIM_NARROW[screen]) || SCRIM[screen] || SCRIM.title;
+    for (let k = 0; k < 5; k++) scrimNow[k] += (want[k] - scrimNow[k]) * ease;
+    [scrimU.uLeft.value, scrimU.uRight.value, scrimU.uTop.value, scrimU.uBottom.value, scrimU.uDim.value] = scrimNow;
+    scrimU.uBase.value = cur.base;
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  function refreshBeacons() {
+    beacons.forEach((b, i) => {
+      b.hi = (screen === "levels" && i === level) || (screen === "continue" && i === 0);
+      b.want = b.hi ? 1 : screen === "levels" ? 0.3 : 0;
+    });
+  }
+  return {
+    setScreen(s) { screen = s; measureFrame(); shot = shotFor(s, level); refreshBeacons(); requestAnimationFrame(measureBand); },
+    setLevel(i) { level = i; shot = shotFor(screen, level); refreshBeacons(); },
+    setTime(name) { loadTime(name, reduced); if (screen === "character") shot = shotFor(screen, level); },
+    setReduced(r) { reduced = r; },
+  };
+}
+
+const world = makeWorld();
+
+/* ---------- title letters ---------- */
+const h1 = $("#name");
+h1.setAttribute("aria-label", h1.textContent);
+let li = 0;
+h1.innerHTML = h1.textContent.split(" ").map((w) => `<span class="w" aria-hidden="true">${[...w].map((ch) => `<span class="l" style="--i:${li++}">${ch}</span>`).join("")}</span>`).join(" ");
+if (COARSE) $("#press").textContent = "Tap to start";
+
+/* ---------- screens and the menu ---------- */
+const screens = new Map($$(".screen").map((s) => [s.id, s]));
+screens.forEach((s) => {
+  s.tabIndex = -1;
+  // the back button first, everything else in one part that scrolls on phones
+  const crumb = s.querySelector(".crumb"), body = document.createElement("div");
+  body.className = "scroll"; s.prepend(crumb);
+  while (crumb.nextSibling) body.appendChild(crumb.nextSibling);
+  s.appendChild(body);
+});
+const menuLinks = $$("#menu a");
+const marker = $(".marker"), hintline = $("#hintline"), keysEl = $("#keys");
+const KEYS = {
+  nav: `<span class="key"><kbd>↑</kbd><kbd>↓</kbd>Select</span>`,
+  open: `<span class="key"><kbd>Enter</kbd>Open</span>`,
+  change: `<span class="key"><kbd>←</kbd><kbd>→</kbd>Change</span>`,
+  tabs: `<span class="key"><kbd>←</kbd><kbd>→</kbd>Switch tab</span>`,
+  sound: `<span class="key"><kbd>M</kbd>Sound</span>`,
+  back: `<button class="key" type="button" data-back><kbd>Esc</kbd>Back</button>`,
+};
+let current = null, started = false, quiet = false, lastMenu = "continue";
+
+function focusQuiet(el) { if (!el) return; quiet = true; el.focus({ preventScroll: true }); quiet = false; }
+function placeMarker() {
+  const a = menuLinks.includes(document.activeElement) ? document.activeElement : menuLinks.find((l) => l.hash === "#" + lastMenu) || menuLinks[0];
+  marker.style.setProperty("--my", `${a.offsetTop + a.offsetHeight / 2 - marker.offsetHeight / 2}px`);
+  if (!current) hintline.textContent = a.dataset.hint;
+}
+function rowsOf(scr) { return $$(".row", scr).filter((r) => r.offsetParent !== null && !r.closest("[hidden]")); }
+
+function show(id) {
+  if (id && !screens.has(id)) id = null;
+  const prev = current; current = id;
+  root.dataset.screen = id || "title";
+  screens.forEach((el, k) => { const on = k === id; el.classList.toggle("on", on); el.inert = !on; });
+  $("#menu").inert = !!id;
+  const scr = id && screens.get(id);
+  keysEl.innerHTML = (scr ? scr.dataset.keys : "nav open sound").split(" ").map((k) => KEYS[k]).join("");
+  hintline.textContent = scr ? scr.dataset.hint : "";
+  if (started) world?.setScreen(id || "title");
+  if (scr) {
+    scr.scrollTop = scr.lastElementChild.scrollTop = 0;
+    if (COARSE) focusQuiet(scr); // on touch nothing should look selected until it is tapped
+    else if (id === "levels") focusQuiet(lvlBtns[level]);
+    else focusQuiet(rowsOf(scr)[0]);
+  } else {
+    if (prev) lastMenu = prev;
+    if (started) focusQuiet(menuLinks.find((l) => l.hash === "#" + lastMenu) || menuLinks[0]);
+    placeMarker();
+  }
+}
+function go(id) {
+  if (id === current) return;
+  Sound.play("open");
+  history.pushState({ s: id }, "", "#" + id);
+  show(id);
+}
+function back() {
+  if (!current) return;
+  Sound.play("back");
+  if (history.state && history.state.s) history.back();
+  else { history.replaceState(null, "", location.pathname + location.search); show(null); }
+}
+addEventListener("popstate", () => { const id = (history.state && history.state.s) || location.hash.slice(1) || null; show(screens.has(id) ? id : null); });
+
+menuLinks.forEach((a) => {
+  a.addEventListener("click", (e) => { e.preventDefault(); if (!started) return; go(a.hash.slice(1)); });
+  a.addEventListener("pointerenter", () => { if (started && document.activeElement !== a) a.focus({ preventScroll: true }); });
+  a.addEventListener("focus", placeMarker);
+});
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-back]"); if (b) { e.preventDefault(); back(); return; }
+  const g = e.target.closest("[data-go]"); if (g) { e.preventDefault(); go(g.dataset.go); }
+});
+document.addEventListener("focusin", (e) => { if (!quiet && started && e.target.matches("#menu a, .row")) Sound.play("move"); });
+// hovering a choice selects it, like a game menu (but never steals focus from typing)
+document.addEventListener("pointerover", (e) => {
+  const r = e.target.closest(".mk.row, .br.row"); if (!r || !current || r === document.activeElement || (COMPACT() && r.matches(".lvl"))) return;
+  if (document.activeElement?.matches("input, textarea") || COARSE) return;
+  r.focus({ preventScroll: true });
+});
+
+/* levels */
+const lvlBtns = $$(".lvl"), lvArts = $$(".lv");
+let level = 0;
+function selectLevel(i) {
+  level = i;
+  lvlBtns.forEach((b, k) => b.setAttribute("aria-current", k === i ? "true" : "false"));
+  lvArts.forEach((a, k) => (a.hidden = k !== i));
+  $("#lv-count").textContent = `Level ${i + 1} of ${lvlBtns.length}`;
+  world?.setLevel(i);
+}
+const stepLevel = (dir) => { selectLevel((level + dir + lvlBtns.length) % lvlBtns.length); Sound.play("move"); };
+$$("[data-lv]").forEach((b) => b.addEventListener("click", () => stepLevel(+b.dataset.lv)));
+// on phones, swipe the level card sideways to fly to the next peak
+let swipe = null;
+$(".lv-detail").addEventListener("touchstart", (e) => { const t = e.touches[0]; swipe = [t.clientX, t.clientY]; }, { passive: true });
+$(".lv-detail").addEventListener("touchend", (e) => {
+  if (!swipe) return;
+  const t = e.changedTouches[0], dx = t.clientX - swipe[0], dy = t.clientY - swipe[1]; swipe = null;
+  if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) stepLevel(dx < 0 ? 1 : -1);
+});
+// keyboard focus selects a level at once; a tap or click selects on click instead, because on phones
+// the card above the list changes height and would move the list out from under the finger
+let downAt = 0;
+addEventListener("pointerdown", () => (downAt = performance.now()), true);
+lvlBtns.forEach((b, i) => {
+  b.addEventListener("focus", () => { if (performance.now() - downAt > 500) selectLevel(i); });
+  // on phones the card sits above the list; bring it back into view (a frame later, once the tap has finished)
+  b.addEventListener("click", () => { selectLevel(i); if (COMPACT()) requestAnimationFrame(() => $(".lv-detail").scrollIntoView({ block: "start", behavior: S.motion === "Reduced" ? "auto" : "smooth" })); });
+});
+selectLevel(0);
+
+/* skills */
+$$(".br").forEach((br) => br.addEventListener("focus", () => $$(".branch").forEach((b) => b.classList.toggle("sel", b.contains(br)))));
+
+/* character tabs */
+const tabs = $$('#character [role="tab"]');
+function selectTab(i, focus = true) {
+  tabs.forEach((t, k) => { const on = k === i; t.setAttribute("aria-selected", on); t.tabIndex = on ? 0 : -1; $("#" + t.getAttribute("aria-controls")).hidden = !on; });
+  if (focus) tabs[i].focus({ preventScroll: true });
+}
+tabs.forEach((t, i) => t.addEventListener("click", () => { if (t.getAttribute("aria-selected") !== "true") Sound.play("tick"); selectTab(i); }));
+selectTab(0, false);
+
+/* option rows: settings and new game */
+function cycle(row, dir) {
+  if (row.dataset.opt) { const k = row.dataset.opt, v = OPTS[k]; S[k] = v[(v.indexOf(S[k]) + dir + v.length) % v.length]; store.set(k, S[k]); applyOpts(); }
+  else if (row.dataset.pick) { const k = row.dataset.pick, v = PICKS[k]; pick[k] = (pick[k] + dir + v.length) % v.length; row.querySelector("output").textContent = v[pick[k]]; }
+  Sound.play("tick");
+}
+$$(".opt").forEach((row) => row.addEventListener("click", (e) => { const b = e.target.closest("[data-step]"); cycle(row, b ? +b.dataset.step : 1); row.focus({ preventScroll: true }); }));
+function applyOpts() {
+  $$(".opt[data-opt]").forEach((r) => (r.querySelector("output").textContent = S[r.dataset.opt]));
+  root.style.setProperty("--fs", S.text === "Large" ? "1.15" : "1");
+  root.dataset.motion = S.motion === "Reduced" ? "reduced" : "full";
+  world?.setReduced(S.motion === "Reduced"); world?.setTime(S.time);
+  Sound.apply();
+  const on = S.sfx === "On" || S.music === "On", snd = $("#snd");
+  snd.classList.toggle("off", !on); snd.setAttribute("aria-pressed", on); snd.querySelector("span").textContent = on ? "Sound on" : "Sound off";
+  $(".press-sub").textContent = on ? "Sound is on. Turn it off any time in the top corner." : "Sound is off. Turn it on any time in the top corner.";
+  requestAnimationFrame(placeMarker);
+}
+function toggleSound() {
+  const on = S.sfx === "On" || S.music === "On";
+  S.sfx = S.music = on ? "Off" : "On"; store.set("sfx", S.sfx); store.set("music", S.music);
+  Sound.init(); applyOpts();
+}
+$("#snd").addEventListener("click", toggleSound);
+
+/* new game: opens the visitor's email app */
+$("#ng").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const name = $("#ng-name").value.trim(), about = $("#ng-about").value.trim();
+  const body = `What I want built: ${PICKS.what[pick.what]}\nWhen I need it: ${PICKS.when[pick.when]}\n\n${about || "I'd like to talk about a project."}\n\n${name ? "From " + name : ""}`;
+  Sound.play("start");
+  location.href = `mailto:prasunshiwakoti@gmail.com?subject=${encodeURIComponent("New project" + (name ? " from " + name : ""))}&body=${encodeURIComponent(body)}`;
+});
+
+/* ---------- press any key ---------- */
+function start() {
+  if (started) return;
+  started = true;
+  root.classList.add("started");
+  Sound.init(); Sound.play("start");
+  world?.setScreen(current || "title");
+  setTimeout(() => ($("#splash").hidden = true), 800);
+  if (!current) { focusQuiet(menuLinks[0]); placeMarker(); }
+}
+$("#splash").addEventListener("click", start);
+addEventListener("pointerdown", () => started && Sound.init());
+
+/* ---------- keyboard ---------- */
+addEventListener("keydown", (e) => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  if (!started) { if (e.key === "Tab" || e.key === "Shift") return; e.preventDefault(); start(); return; }
+  Sound.init();
+  const typing = e.target.matches?.("input, textarea");
+  if (e.key === "Escape") { e.preventDefault(); if (typing) e.target.blur(); back(); return; }
+  if (typing) return;
+  if (e.key === "m" || e.key === "M") { toggleSound(); return; }
+  const k = e.key, up = k === "ArrowUp" || k === "w" || k === "W", down = k === "ArrowDown" || k === "s" || k === "S";
+  const left = k === "ArrowLeft" || k === "a" || k === "A", right = k === "ArrowRight" || k === "d" || k === "D";
+  const step = (list, dir) => { const i = list.indexOf(document.activeElement.closest?.(".row, #menu a")); const n = list[(i + dir + list.length) % list.length] || list[0]; n.focus({ preventScroll: !current }); if (current) n.scrollIntoView({ block: "nearest" }); };
+
+  if (!current) {
+    if (up || down) { e.preventDefault(); step(menuLinks, down ? 1 : -1); }
+    else if (right || k === " ") { e.preventDefault(); const a = menuLinks.includes(document.activeElement) ? document.activeElement : menuLinks[0]; go(a.hash.slice(1)); }
+    return;
+  }
+  const scr = screens.get(current);
+  if (k === "Backspace") { e.preventDefault(); back(); return; }
+  const row = document.activeElement.closest?.(".row");
+  if ((left || right) && row && (row.dataset.opt || row.dataset.pick)) { e.preventDefault(); cycle(row, right ? 1 : -1); return; }
+  if ((k === "Enter" || k === " ") && row && (row.dataset.opt || row.dataset.pick)) { e.preventDefault(); cycle(row, 1); return; }
+  if (scr.dataset.nav === "tabs") {
+    if (left || right) { e.preventDefault(); const i = tabs.findIndex((t) => t.getAttribute("aria-selected") === "true"); selectTab((i + (right ? 1 : -1) + tabs.length) % tabs.length); Sound.play("tick"); }
+    return;
+  }
+  if (up || down) { e.preventDefault(); step(rowsOf(scr), down ? 1 : -1); }
+});
+
+/* ---------- boot ---------- */
+applyOpts();
+const deep = location.hash.slice(1);
+if (screens.has(deep)) {
+  // arriving on a direct link skips the start screen
+  started = true; root.classList.add("started"); $("#splash").hidden = true;
+  history.replaceState(null, "", location.pathname + location.search);
+  history.pushState({ s: deep }, "", "#" + deep);
+  world?.setScreen(deep);
+  show(deep);
+} else {
+  show(null);
+  $("#splash").focus({ preventScroll: true });
+}
+</script>
+</body>
+</html>

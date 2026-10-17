@@ -1,0 +1,14 @@
+{
+  // must match the Worker's name in the Cloudflare dashboard, or the build stops
+  "name": "portfolio-website",
+  "main": "worker.js",
+  "compatibility_date": "2026-06-01",
+  "assets": {
+    "directory": "./sites",
+    "binding": "ASSETS",
+    // send every request through worker.js so it can pick the folder
+    "run_worker_first": true,
+    // worker.js maps "/" to index.html itself
+    "html_handling": "none"
+  }
+}

@@ -1,0 +1,55 @@
+# Prasun Shiwakoti
+
+> Full-stack developer based in Kathmandu, Nepal. Builds web applications and
+> AI agents, and the servers, databases and models that make them work. Most
+> recently Buildor, a no-code website builder that 100+ people use. This is his
+> personal site: a single page covering services, selected work, experience and
+> contact details.
+
+- **Role:** Full-Stack Web Developer at Laid&Lazy Pvt. Ltd.
+- **Location:** Kathmandu, Nepal
+- **Status:** taking freelance projects, works with clients anywhere
+- **Email:** prasunshiwakoti@gmail.com
+- **Phone:** +977 9861812959
+- **Site:** https://prasunshiwakoti.com.np/
+
+Most of his work is backend: the part of a product nobody sees, and the part
+that decides whether the rest of it holds. Came to software through machine
+learning and stayed for the engineering.
+
+## What he builds for clients
+
+- **Web applications:** full products with sign-in, dashboards, payments and an admin panel the client can run themselves.
+- **AI agents and automation:** agents that research, write, sort or reply, connected to the tools a business already uses.
+- **Machine learning features:** forecasts, recommendations and models that read text, built into an existing product.
+- **APIs and backends:** connecting systems together, or taking over an unstable codebase and making it reliable.
+
+## Selected work
+
+- [Buildor](https://buildor.io): A platform that lets anyone build their own website without writing code. Architected and shipped at Laid&Lazy Pvt. Ltd.; more than 100 people run their sites on it. Django, React, PostgreSQL. 2025 to now.
+- [AI Social-Media Automation](https://github.com/Prasun-Shiwakoti/Social-Media-Manager-AI): Writes on-brand posts with retrieval (RAG), schedules them, and scores how people feel in the replies, so one person can run several accounts. Django, React, RAG, LSTM. 2025.
+- [Multi-Agent Research System](https://github.com/Prasun-Shiwakoti/Multi-Agent-Competitive-Intelligence-Research-System): Three AI agents research competitors. One gathers sources, one checks every claim, one writes the brief. Python, LLM agents. 2025.
+- [News-Powered Market Analysis](https://github.com/Prasun-Shiwakoti/News-Powered-Stock-Market-Analysis): Combines the mood of the day's financial news with price history to forecast where stocks go next. Fusemachines AI Fellowship capstone. LSTM, XGBoost, Pandas. 2025.
+- [Transformer From Scratch](https://github.com/Prasun-Shiwakoti/transformer-from-scratch): Attention, positional encoding and training written from first principles. PyTorch, NLP. 2024.
+- [CoCo, AI Study Assistant](https://github.com/Prasun-Shiwakoti/CoCo): A study helper that learns where each student gets stuck and changes its explanations and practice questions to fit. Django, React, machine learning. 2024.
+- [Heart-Disease Prediction API](https://github.com/Prasun-Shiwakoti/heart-disease-api): A web service that returns a heart-disease risk estimate from patient measurements in one request. FastAPI, scikit-learn. 2023.
+
+## Experience
+
+- **Full-Stack Web Developer, Laid&Lazy Pvt. Ltd.** (Sept 2025 to now): Architected and shipped Buildor, a no-code website builder with 100+ active users.
+- **AI Fellow, Fusemachines** (May to Dec 2025): Fully funded six-month AI programme and Microdegree in AI. Shipped ML systems with Docker and automated deployment, and built data pipelines over 10,000+ records.
+- **B.E. Computer Engineering, Kathmandu Engineering College** (2023 to now): Full scholarship, IOE rank 320. President of the KEC IT Club.
+- **President, CS Club, Kathmandu Model College** (2020 to 2022): Grew club sign-ups by 25% and ran bootcamps on cybersecurity, Python and web development.
+- **Hackathon winner, Provathon 2020** (CSIT Association of Nepal): A health-monitoring app that predicts cardiac arrest from live data.
+
+## Profiles
+
+- [GitHub](https://github.com/Prasun-Shiwakoti): Source for the projects above.
+- [LinkedIn](https://www.linkedin.com/in/prasun-shiwakoti-9570581b3/): Professional profile and contact.
+
+## Optional
+
+- [Game version](https://game-version.prasunshiwakoti.com.np/): The same portfolio as a game start screen over 3D mountains, with one peak per project.
+- [Formal version](https://formal-version.prasunshiwakoti.com.np/): The earlier one-page version of this site.
+- **Certifications:** Fusemachines Microdegree in AI (2025), Stanford Machine Learning Specialization (2024).
+- **Technologies:** Python, Django, FastAPI, React, PostgreSQL, Docker, CI/CD, PyTorch, scikit-learn, Pandas, SQL, REST APIs, LLM agents, RAG.

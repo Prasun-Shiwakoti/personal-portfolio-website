@@ -1102,6 +1102,14 @@ section[id],
 	color: var(--ink-3);
 	padding-top: 14px;
 }
+.colophon-grid a {
+	color: var(--ink-2);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+.colophon-grid a:hover {
+	color: var(--ink);
+}
 .colophon-note {
 	font-size: 11px;
 	line-height: 1.7;
