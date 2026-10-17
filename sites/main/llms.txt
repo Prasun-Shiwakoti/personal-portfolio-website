@@ -9,8 +9,7 @@
 - **Role:** Full-Stack Web Developer at Laid&Lazy Pvt. Ltd.
 - **Location:** Kathmandu, Nepal
 - **Status:** taking freelance projects, works with clients anywhere
-- **Email:** prasunshiwakoti@gmail.com
-- **Phone:** +977 9861812959
+- **Email:** hello@prasunshiwakoti.com.np
 - **Site:** https://prasunshiwakoti.com.np/
 
 Most of his work is backend: the part of a product nobody sees, and the part

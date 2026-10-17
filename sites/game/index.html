@@ -425,7 +425,7 @@ html:not([data-screen="levels"]) .plabel { pointer-events: none; }
         <div class="field"><label for="ng-name">Your name</label><input class="row" id="ng-name" autocomplete="name"></div>
         <div class="field"><label for="ng-about">Tell me about it</label><textarea class="row" id="ng-about" placeholder="A booking app for my clinic, with an admin panel for my staff"></textarea></div>
       </div>
-      <div class="ng-go"><button class="act primary row" type="submit">Start</button><p>Or write to <a href="mailto:prasunshiwakoti@gmail.com">prasunshiwakoti@gmail.com</a></p></div>
+      <div class="ng-go"><button class="act primary row" type="submit">Start</button><p>Or write to <a href="mailto:hello@prasunshiwakoti.com.np">hello@prasunshiwakoti.com.np</a></p></div>
     </form>
   </section>
 
@@ -543,8 +543,7 @@ html:not([data-screen="levels"]) .plabel { pointer-events: none; }
       <button class="crumb" type="button" data-back><svg viewBox="0 0 9 12" aria-hidden="true"><path d="M8 0v12L0 6z" fill="currentColor"/></svg>Main menu</button>
       <div class="screen-head"><h2 id="h-exit">Leaving already?</h2><p>Before you go, here's how to reach me. I reply within a day or two. Or leave for another version of this site.</p></div>
       <ul>
-        <li><a class="q-row mk row" href="mailto:prasunshiwakoti@gmail.com">Email<span>prasunshiwakoti@gmail.com</span></a></li>
-        <li><a class="q-row mk row" href="tel:+9779861812959">Call<span>+977 9861812959</span></a></li>
+        <li><a class="q-row mk row" href="mailto:hello@prasunshiwakoti.com.np">Email<span>hello@prasunshiwakoti.com.np</span></a></li>
         <li><a class="q-row mk row" href="https://github.com/Prasun-Shiwakoti" target="_blank" rel="noopener">GitHub<span>Prasun-Shiwakoti</span></a></li>
         <li><a class="q-row mk row" href="https://www.linkedin.com/in/prasun-shiwakoti-9570581b3/" target="_blank" rel="noopener">LinkedIn<span>Prasun Shiwakoti</span></a></li>
         <li><a class="q-row mk row" href="https://prasunshiwakoti.com.np/">Main site<span>The usual website</span></a></li>
@@ -1196,7 +1195,7 @@ $("#ng").addEventListener("submit", (e) => {
   const name = $("#ng-name").value.trim(), about = $("#ng-about").value.trim();
   const body = `What I want built: ${PICKS.what[pick.what]}\nWhen I need it: ${PICKS.when[pick.when]}\n\n${about || "I'd like to talk about a project."}\n\n${name ? "From " + name : ""}`;
   Sound.play("start");
-  location.href = `mailto:prasunshiwakoti@gmail.com?subject=${encodeURIComponent("New project" + (name ? " from " + name : ""))}&body=${encodeURIComponent(body)}`;
+  location.href = `mailto:hello@prasunshiwakoti.com.np?subject=${encodeURIComponent("New project" + (name ? " from " + name : ""))}&body=${encodeURIComponent(body)}`;
 });
 
 /* ---------- press any key ---------- */
