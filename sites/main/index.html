@@ -810,16 +810,20 @@ if (renderer) {
         // scrolling drags the ink: dots trail behind the page and wobble back into place when it stops
         p.y += uFlow * (0.15 + aSeed.z * 0.85);
         p.x += sin(aSeed.y * 37.0 + uTime * 5.0) * abs(uFlow) * 0.18;
-        // a magnifying lens under the cursor or finger (2x at the centre); a quick flick drags the dots along with it
-        vec2 d = p - uMouse; float dist = length(d);
-        float f = exp(-dist * dist / (uLens * uLens)) * uPush;
-        p += d * f + uVel * f;
+        // the cursor or finger stirs the ink: nearby dots scatter, each its own way and a little outward, and sway
+        // while it rests. The pull fades smoothly with distance and never stops at an edge, so there's no circle.
+        vec2 d = p - uMouse; float dist = length(d), q = dist / uLens, l = 1.0 / (1.0 + q * q);
+        float a = aSeed.x * 6.2832 + sin(uTime * (0.8 + aSeed.y)) * 0.8 * ${REDUCED ? "0.0" : "1.0"};
+        vec2 stir = vec2(cos(a), sin(a)) * uLens * 0.42 * pow(l, 1.5) * (0.35 + aSeed.y * 0.65);
+        vec2 away = d / max(dist, 1e-3) * uLens * 0.5 * q * pow(l, 1.8) * (0.4 + aSeed.z * 0.6);
+        float f = pow(l, 1.5) * uPush;
+        p += (stir + away) * uPush + uVel * f * 0.5;
         float rt = uTime - uClickT;
         float ring = exp(-pow((length(p - uClick) - rt * 520.0) / 46.0, 2.0)) * exp(-rt * 1.5) * step(0.0, rt);
         p += normalize(p - uClick + 1e-3) * ring * 24.0;
         float diam = mix(aA.z * uRA.z, aB.z * uRB.z, e);
         float sweep = clamp((uReveal * 1.7 - (aA.y * 0.75 + aA.x * 0.25)) * 3.0, 0.0, 1.0);
-        diam *= mix(sweep, 1.0, e) * (1.0 + f * 1.1 + ring * 1.0) * (1.0 - fly * 0.35);
+        diam *= mix(sweep, 1.0, e) * (1.0 - f * 0.15 + ring * 1.0) * (1.0 - fly * 0.35);
         gl_Position = vec4(p.x / uView.x * 2.0 - 1.0, 1.0 - p.y / uView.y * 2.0, 0.0, 1.0);
         vPx = max(diam * uDpr, 0.0);
         gl_PointSize = vPx + 1.0;
@@ -854,7 +858,8 @@ if (renderer) {
     // the line a plate's centre sits on while it is pinned
     const s = slots[1], cs = getComputedStyle(s);
     T = cs.position === "sticky" ? parseFloat(cs.top) + s.offsetHeight / 2 : innerHeight / 2;
-    U.uLens.value = Math.max(96, Math.min(150, innerWidth * 0.095));
+    // how far the stirring reaches before it starts to fade, kept in step with the dot size (phones get a smaller portrait)
+    U.uLens.value = FINE ? Math.max(56, Math.min(72, innerWidth * 0.045)) : Math.max(40, Math.min(64, innerWidth * 0.11));
   }
   size(); addEventListener("resize", size);
 
